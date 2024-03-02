@@ -16,7 +16,7 @@ Create .env file in tour service
 NODE_ENV=development
 PORT=4001
 CLIENT_URL=localhost:3000
-MONGO_URL=mongodb://127.0.0.1:27017/travel
+MONGO_URL=mongodb+srv://travel:travel@cluster0.obnnzsj.mongodb.net/travel?retryWrites=true&w=majority
 RABBITMQ_ENDPOINT=amqps://hxcogcza:cU1DuN2iHmYndFue4odwleYX4g9LRfz-@octopus.rmq3.cloudamqp.com/hxcogcza
 JWT_TOKEN=travelbooking
 JWT_EXPIRES_IN=2d
