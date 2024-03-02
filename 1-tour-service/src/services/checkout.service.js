@@ -20,14 +20,16 @@ class CheckoutService {
         });
 
         let { tours } = cart;
+        tours = tours.toObject();
         if (tourIds)
-            tours = tours.toObject().filter(item => tourIds.includes(item.tour._id.toString()));
+            tours = tours.filter(item => tourIds.includes(item.tour._id.toString()));
         let checkoutOrder = {
             totalOrder: 0,
             discount: 0,
             totalPrice: 0
         };
         const toursWithTotalPrice = getTotalPrice(tours);
+
         if (discount) {
             const amountPayload = toursWithTotalPrice.map( item => {
                 return { tourId: item.tour._id, totalPrice: item.totalPrice }
