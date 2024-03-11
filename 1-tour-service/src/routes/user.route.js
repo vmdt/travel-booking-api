@@ -1,5 +1,5 @@
 const express = require('express');
-const { protect } = require('../middlewares/auth.middleware');
+const { protect, restrictTo } = require('../middlewares/auth.middleware');
 const userController = require('../controllers/user.controller');
 const asyncHandler = require('../helpers/async.handler');
 
@@ -9,9 +9,13 @@ class UserRoutes {
     }
 
     routes() {
-        this.router.patch('/profile/:profileId', protect, asyncHandler(userController.updateProfile));
-        this.router.get('/my-profile', protect, asyncHandler(userController.getMyProfile));
-        this.router.get('/:userId', asyncHandler(userController.getUserByUserId));
+        this.router.route('/:userId')
+                .get(asyncHandler(userController.getUser))
+                .patch(asyncHandler(userController.updateUser));
+
+        this.router.use([protect, restrictTo('admin')])
+        this.router.route('/')
+                .get(asyncHandler(userController.getAllUsers));
         return this.router;
     }
 }

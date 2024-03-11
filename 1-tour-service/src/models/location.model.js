@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 const Location = new mongoose.Schema({
     name: { type: String, required: true },
-    type: { type: String, default: 'poi', enum: ['poi', 'cit'] },
+    type: { type: String, default: 'point', enum: ['point', 'city'] },
     loc: {
         type: {
             type: String,

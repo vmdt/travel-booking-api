@@ -1,13 +1,20 @@
 const _ = require('lodash');
 const { Types } = require('mongoose');
 const TourModel = require('../models/tour.model');
-const { getMany, updateOne, deleteOne } = require('../repositories/factory.repo');
+const { getMany, updateOne, deleteOne, getOne } = require('../repositories/factory.repo');
 const { createTour, getAllTours, updateTourById } = require('../repositories/tour.repo');
 const { NotFoundError, BadRequestError } = require('../utils/error.response');
 const { isDataURL } = require('../utils');
 const { upload } = require('../helpers/cloudinary');
 
 class TourService {
+
+    static getTourDetail = async (tourId) => {
+        const tour = await getOne(TourModel, {
+            _id: new Types.ObjectId(tourId)
+        }, true, 'category locations transports');
+        return { tour };
+    }
 
     static getToursWithin = async ({ distance, latlng, unit }) => {
         const radius = unit === 'mi' ? distance / 3963.2 : distance / 6378.1;
@@ -141,7 +148,7 @@ class TourService {
         ).lean();
         if (!tourExisting)
             throw new NotFoundError('Not found tour');
-        if (!tour.isActive)
+        if (!tourExisting.isActive)
             throw new BadRequestError('Tour has been deactivated');
         const { thumbnail, images } = payload;
         if (thumbnail) {

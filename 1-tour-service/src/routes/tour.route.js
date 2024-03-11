@@ -17,6 +17,7 @@ class TourRoutes {
         this.router.get('/all', asyncHandler(tourController.getAllTours));
         this.router.get('/active-tours/all', asyncHandler(tourController.getActiveTours));
         this.router.get('/inactive-tours/all', asyncHandler(tourController.getInactiveTours));
+        this.router.get('/:tourId', asyncHandler(tourController.getTourDetail));
         
         this.router.use([ protect, restrictTo('admin') ]);
         this.router.post('/activate/:tourId', asyncHandler(tourController.activateTour));

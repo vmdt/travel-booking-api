@@ -1,14 +1,23 @@
 const express = require('express');
+const passport = require('passport');
 const asyncHandler = require('../helpers/async.handler');
 const authController = require('../controllers/auth.controller');
 const { protect, restrictTo } = require('../middlewares/auth.middleware');
+const PassportConfig = require('../helpers/passport');
 
 class AuthRoutes {
     constructor() {
         this.router = express.Router();
+        new PassportConfig(passport).google();
     }
 
     routes() {
+        this.router.get('/google',
+            passport.authenticate('google', { scope: ['email', 'profile'] }));
+        this.router.get('/google/callback',
+            passport.authenticate('google', { session: false }),
+            asyncHandler(authController.handleGoogleAuth));
+
         this.router.post('/signup', asyncHandler(authController.signup));
         this.router.post('/login', asyncHandler(authController.login));
         this.router.put('/verify-email', asyncHandler(authController.verifyEmail));

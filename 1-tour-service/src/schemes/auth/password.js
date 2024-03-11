@@ -11,8 +11,8 @@ const emailSchema = Joi.object().keys({
 const passwordSchema = Joi.object().keys({
     password: Joi.string().min(8).max(16).required().messages({
         'string.base': 'Password must be of type string',
-        'string.min': 'Invalid password',
-        'string.max': 'Invalid password',
+        'string.min': 'Password must be at least 8 of characters',
+        'string.max': 'Password must be under 16 of characters',
         'string.empty': 'Password is a required field'
     }),
     passwordConfirm: Joi.any().equal(Joi.ref('password')).required().messages({

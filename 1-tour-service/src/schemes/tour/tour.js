@@ -69,7 +69,9 @@ const tourSchema = Joi.object().keys({
         participantsCategoryIdentifier: Joi.string(),
         value: Joi.number().greater(0),
         currency: Joi.string()
-    })).optional()
+    })).optional(),
+    locations: Joi.array().items(Joi.string()).optional(),
+    transports: Joi.array().items(Joi.string()).optional()
 });
 
 const updateTourSchema = Joi.object().keys({
@@ -118,7 +120,9 @@ const updateTourSchema = Joi.object().keys({
         participantsCategoryIdentifier: Joi.string(),
         value: Joi.number().greater(0),
         currency: Joi.string()
-    })).optional()
+    })).optional(),
+    locations: Joi.array().items(Joi.string()).optional(),
+    transports: Joi.array().items(Joi.string()).optional()
 });
 
 module.exports = {

@@ -3,6 +3,7 @@ const helmet = require('helmet');
 const hpp = require('hpp');
 const cors = require('cors');
 const compression = require('compression');
+const passport = require('passport');
 const { StatusCodes } = require('http-status-codes');
 
 const config = require('./config');
@@ -34,6 +35,7 @@ class Application {
         this.app.use(compression());
         this.app.use(express.json({ limit: '500mb' }));
         this.app.use(express.urlencoded({ extended: true, limit: '500mb' }));
+        this.app.use(passport.initialize());
     }
 
     routesMiddleware() {

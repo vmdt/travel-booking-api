@@ -15,7 +15,6 @@ const {
     getUserByPasswordResetToken,
     updateUserById
 } = require('../repositories/user.repo');
-const ProfileModel = require('../models/profile.model');
 const EXCHANGE_AUTH = 'travel-auth';
 const ROUTING_AUTH = 'auth';
 
@@ -35,12 +34,6 @@ class AuthService {
             passwordConfirm,
             emailVerificationToken: randomCharacters
         });
-
-        const profile = await ProfileModel.create({
-            user: response._id
-        });
-        response.profile = profile._id;
-
 
         const verificationLink = `${config.CLIENT_URL}/confirm_email?v_token=${response.emailVerificationToken}`;
         const messageDetails = {

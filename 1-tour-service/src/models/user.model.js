@@ -16,12 +16,10 @@ const User = new mongoose.Schema ({
         index: true
     },
     password: {
-        type: String,
-        required: true
+        type: String
     },
     passwordConfirm: {
         type: String,
-        required: true,
         validate: {
             validator: function(pwc) {
                 return pwc === this.password;
@@ -43,10 +41,25 @@ const User = new mongoose.Schema ({
         default: true
     },
     lastSignInAt: Date,
-    profile: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Profile'
-    }
+    fullname: String,
+    profilePicture: {
+        type: String,
+        default: `${config.PROFILE_PICTURE_DEFAULT}`
+    },
+    profilePublishId: String,
+    gender: String,
+    dateOfBirth: String,
+    address: String,
+    nationality: {
+        type: String,
+        default: 'Việt Nam'
+    },
+    phone: String,
+    passport: String,
+    dateOfIssuePassport: String,
+    dateOfExpirationPassport: String,
+    googleId: String,
+    typeAuth: String
 }, {
     timestamps: true
 });

@@ -4,6 +4,13 @@ const { BadRequestError } = require("../utils/error.response");
 const { SuccessResponse, NoContent } = require("../utils/sucess.response");
 
 class TourController {
+    getTourDetail = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'Get tour detail successfully',
+            metadata: await TourService.getTourDetail(req.params.tourId)
+        }).send(res);
+    }
+
     getToursWithin = async (req, res, next) => {
         new SuccessResponse({
             message: 'Get tours within distance successfully',

@@ -5,6 +5,7 @@ const DataBase = require('./db/init.mongo');
 const { createConnection } = require('./queues/connection');
 const { redisConnect } = require('./redis/redis.connection');
 const OrderWorker = require('./queues/order.worker');
+const { consumeAuthEmailMessage } = require('./queues/email.consumer');
 
 const SERVER_PORT = config.PORT || 4001;
 
@@ -23,6 +24,7 @@ class TravelServer {
     async startQueues() {
         new OrderWorker(); // run job worker instance
         this.channel = await createConnection();
+        await consumeAuthEmailMessage(this.channel);
     }
 
     async startRedis() {

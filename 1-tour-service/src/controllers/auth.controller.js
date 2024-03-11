@@ -2,10 +2,31 @@ const loginSchema = require("../schemes/auth/login");
 const signupSchema = require("../schemes/auth/signup");
 const { emailSchema, passwordSchema } = require('../schemes/auth/password');
 const AuthService = require("../services/auth.service");
-const { BadRequestError } = require("../utils/error.response");
+const { BadRequestError, AuthFailureError } = require("../utils/error.response");
 const { CREATED, SuccessResponse } = require("../utils/sucess.response");
+const { signToken } = require("../helpers/jwt");
+const { omit } = require('../utils');
 
 class AuthController {
+    handleGoogleAuth = async (req, res, next) => {
+        const user = req.user;
+        if (req.user) {
+            const token = signToken({
+                id: user._id,
+                role: user.role
+            });
+            new SuccessResponse({
+                message: 'Log in by google successfully',
+                metadata: {
+                    user: omit(user.toObject(), ['googleId']),
+                    access_token: token
+                }
+            }).send(res);
+        } else {
+            throw new AuthFailureError('Unauthenticated');
+        }
+    }
+
     signup = async (req, res, next) => {
         const { error } = await Promise.resolve(signupSchema.validate(req.body));
         if (error?.details)

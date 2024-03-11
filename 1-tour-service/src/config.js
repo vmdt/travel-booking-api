@@ -20,6 +20,15 @@ class Config {
         this.VNPAY_SECRET = process.env.VNPAY_SECRET || '';
         this.VNPAY_TMN_CODE = process.env.VNPAY_TMN_CODE || '';
         this.VNPAY_URL = process.env.VNPAY_URL || 'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html';
+        this.GOOGLE_CLIENT_ID = process.env.GOOGLE_CLIENT_ID || '';
+        this.GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || '';
+        this.GOOGLE_REDIRECT_URL = process.env.GOOGLE_REDIRECT_URL || '';
+        this.GOOGLE_REFRESH_TOKEN = process.env.GOOGLE_REFRESH_TOKEN || '';
+        this.HOST_MAIL = process.env.HOST_MAIL || '';
+        this.PORT_MAIL = process.env.PORT_MAIL || '';
+        this.USER_MAIL = process.env.USER_MAIL || '';
+        this.USER_MAIL_PASS = process.env.USER_MAIL_PASS || '';
+        this.SENDER_MAIL = process.env.SENDER_MAIL || '';
     }
 
     cloudinaryConfig() {

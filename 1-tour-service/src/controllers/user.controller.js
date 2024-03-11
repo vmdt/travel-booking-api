@@ -4,34 +4,24 @@ const { BadRequestError } = require("../utils/error.response");
 const { SuccessResponse } = require("../utils/sucess.response")
 
 class UserController {
-    getMyProfile = async (req, res, next) => {
+    getAllUsers = async (req, res, next) => {
         new SuccessResponse({
-            message: 'Get profile user successfully',
-            metadata: await UserService.getProfileByUserId(req.user._id)
+            message: 'Get all users successfully',
+            metadata: await UserService.getAllUsers(req.query)
         }).send(res);
     }
 
-    getProfileById = async (req, res, next) => {
+    updateUser = async (req, res, next) => {
         new SuccessResponse({
-            message: 'Get profile by id successfully',
-            metadata: await UserService.getProfileById(req.params.profileId)
+            message: 'Update user successfully',
+            metadata: await UserService.updateUser(req.params.userId, req.body)
         }).send(res);
     }
 
-    getUserByUserId = async (req, res, next) => {
+    getUser = async (req, res, next) => {
         new SuccessResponse({
-            message: 'Get user by id successfully',
-            metadata: await UserService.getUserByUserId(req.params.userId)
-        }).send(res);
-    }
-
-    updateProfile = async (req, res, next) => {
-        const { error } = await Promise.resolve(profileSchema.validate(req.body));
-        if (error?.details)
-            throw new BadRequestError(error.details[0].message);
-        new SuccessResponse({
-            message: 'Update profile successfully',
-            metadata: await UserService.updateProfileById(req.params.profileId, req.body)
+            message: 'Get user successfully',
+            metadata: await UserService.getUser(req.params.userId)
         }).send(res);
     }
 }
