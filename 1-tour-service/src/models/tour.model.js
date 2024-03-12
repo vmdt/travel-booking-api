@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Tour = new mongoose.Schema({
     code: { type: String, required: true },
     title: { type: String, required: true },
+    type: { type: String, default: 'activity'},
     summary: String,
     highlights: [{ type: String }],
     description: String,
@@ -66,6 +67,10 @@ const Tour = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Transportation'
     }],
+    hotels: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Hotel'
+    }],
     priceOptions: [{
         title: {
             type: String,
@@ -78,5 +83,6 @@ const Tour = new mongoose.Schema({
 });
 
 Tour.index({ startLocation: '2dsphere' });
+Tour.index({ title: 'text' });
 
 module.exports = mongoose.model('Tour', Tour);

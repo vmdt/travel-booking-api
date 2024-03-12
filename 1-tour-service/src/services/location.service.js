@@ -14,8 +14,8 @@ class LocationService {
         }
     } 
 
-    static createLocation = async ({ name, type, loc }) => {
-        const location = await LocationModel.create({ name, type, loc });
+    static createLocation = async ({ title, type, loc }) => {
+        const location = await LocationModel.create({ title, type, loc });
         return { location };
     }
 

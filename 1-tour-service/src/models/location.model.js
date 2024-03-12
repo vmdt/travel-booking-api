@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const Location = new mongoose.Schema({
-    name: { type: String, required: true },
+    title: { type: String, required: true },
     type: { type: String, default: 'point', enum: ['point', 'city'] },
     loc: {
         type: {
@@ -10,7 +10,8 @@ const Location = new mongoose.Schema({
             default: 'Point'
         }, 
         coordinates: [Number]
-    }
+    },
+    thumbnail: String
 });
 
 Location.index({ name: 'text' });

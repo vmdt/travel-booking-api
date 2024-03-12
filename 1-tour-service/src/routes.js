@@ -9,6 +9,7 @@ const cartRoutes = require('./routes/cart.route');
 const checkoutRoutes = require('./routes/checkout.route');
 const bookingRoutes = require('./routes/booking.route');
 const paymentRoutes = require('./routes/payment.route');
+const searchRoutes = require('./routes/search.route');
 
 const BASE_AUTH_URL = '/api/v1/auth';
 const BASE_USER_URL = '/api/v1/users';
@@ -21,6 +22,7 @@ const BASE_CART_URL = '/api/v1/carts';
 const BASE_CHECKOUT_URL = '/api/v1/checkout';
 const BASE_BOOKING_URL = '/api/v1/booking';
 const BASE_PAYMENT_URL = '/api/v1/payment';
+const BASE_SEARCH_URL = '/api/v1/search';
 
 const appRoutes = (app) => {
     app.use(BASE_USER_URL, userRoutes.routes());
@@ -34,6 +36,7 @@ const appRoutes = (app) => {
     app.use(BASE_CHECKOUT_URL, checkoutRoutes.routes());
     app.use(BASE_BOOKING_URL, bookingRoutes.routes());
     app.use(BASE_PAYMENT_URL, paymentRoutes.routes());
+    app.use(BASE_SEARCH_URL, searchRoutes.routes());
 }
 
 module.exports = appRoutes;

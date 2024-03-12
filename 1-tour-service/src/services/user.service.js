@@ -5,10 +5,11 @@ const { getAll, updateOne, getOne } = require('../repositories/factory.repo');
 
 class UserService {
     static getAllUsers = async (query) => {
-        const users = await getAll(UserModel, query, true);
+        let users = await getAll(UserModel, query, true);
+        users = users.map(user => _.omit(user, ['password']));
         return {
             result: users.length,
-            users: _.omit(users, ['password'])
+            users
         }
     }
 
