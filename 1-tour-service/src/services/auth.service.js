@@ -68,9 +68,9 @@ class AuthService {
         }
     }
 
-    static login = async ({ username, password }) => {
-        const isValidEmail = isEmail(username);
-        const existUser = isValidEmail ? await getUserByEmail(username) : await getUserByUsername(username);
+    static login = async ({ email, password }) => {
+        const isValidEmail = isEmail(email);
+        const existUser = isValidEmail ? await getUserByEmail(email) : await getUserByUsername(email);
         if (!existUser)
             throw new BadRequestError('Invalid username or email');
 
@@ -90,7 +90,7 @@ class AuthService {
 
         return {
             user: { ...omit(existUser.toObject(), ['password']) },
-            access_token: token
+            accessToken: token
         }
     }
 

@@ -1,7 +1,7 @@
 const Joi = require('joi');
 
 const loginSchema = Joi.object().keys({
-    username: Joi.alternatives().conditional(Joi.string().email(), {
+    email: Joi.alternatives().conditional(Joi.string().email(), {
         then: Joi.string().email().required().messages({
             'string.base': 'Email must be of type string',
             'string.email': 'Invalid email',
