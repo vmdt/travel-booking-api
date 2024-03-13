@@ -64,7 +64,7 @@ class AuthService {
         
         return {
             user: { ...omit(response.toObject(), ['password']) },
-            access_token: token
+            accessToken: token
         }
     }
 

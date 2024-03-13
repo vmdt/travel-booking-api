@@ -19,7 +19,7 @@ class AuthController {
                 message: 'Log in by google successfully',
                 metadata: {
                     user: omit(user.toObject(), ['googleId']),
-                    access_token: token
+                    accessToken: token
                 }
             }).send(res);
         } else {
