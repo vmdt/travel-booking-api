@@ -33,8 +33,8 @@ class Application {
 
     standardMiddleware() {
         this.app.use(compression());
-        this.app.use(express.json({ limit: '500mb' }));
         this.app.use(express.urlencoded({ extended: true, limit: '500mb' }));
+        this.app.use(express.json({ limit: '500mb' }));
         this.app.use(passport.initialize());
     }
 

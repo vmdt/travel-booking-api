@@ -1,5 +1,4 @@
 const cloudinary = require('cloudinary');
-const { error } = require('../schemes/tour/tourType');
 
 const upload =  (file, options = {}) => {
     return new Promise((resolve) => {

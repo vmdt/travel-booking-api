@@ -1,6 +1,8 @@
+const { upload } = require("../helpers/cloudinary");
+const { getUserById } = require("../repositories/user.repo");
 const profileSchema = require("../schemes/user/profile");
 const UserService = require("../services/user.service");
-const { BadRequestError } = require("../utils/error.response");
+const { BadRequestError, NotFoundError } = require("../utils/error.response");
 const { SuccessResponse } = require("../utils/sucess.response")
 
 class UserController {
@@ -12,6 +14,10 @@ class UserController {
     }
 
     updateUser = async (req, res, next) => {
+        const { error } = await Promise.resolve(profileSchema.validate(req.body));
+        if (error?.details)
+            throw new BadRequestError(error.details[0].message);
+
         new SuccessResponse({
             message: 'Update user successfully',
             metadata: await UserService.updateUser(req.params.userId, req.body)

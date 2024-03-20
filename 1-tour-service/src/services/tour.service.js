@@ -68,17 +68,27 @@ class TourService {
     }
 
     static createTour = async (payload) => {
-        const { thumbnail, images } = payload;
+        const { thumbnail, images, code } = payload;
         if (isDataURL(thumbnail)) {
-            const thumbResult = await upload(thumbnail);
+            const thumbResult = await upload(thumbnail, {
+                folder: 'travelife/tour',
+                overwrite: true,
+                invalidate: true,
+                public_id: `${code}`
+            });
             if (!thumbResult?.public_id)
                 throw new BadRequestError('File upload error');
             payload.thumbnail = thumbResult?.secure_url;
         }
 
-        payload.images = await Promise.all(images.map(async img => {
+        payload.images = await Promise.all(images.map(async (img, i) => {
             if (isDataURL(img)) {
-                const imgResult = await upload(img);
+                const imgResult = await upload(img, {
+                    folder: 'travelife/tour',
+                    overwrite: true,
+                    invalidate: true,
+                    public_id: `${code}-${i}`
+                });
                 if (!imgResult?.public_id)
                     throw new BadRequestError('File upload error');
                 return imgResult?.secure_url;
@@ -153,16 +163,26 @@ class TourService {
         const { thumbnail, images } = payload;
         if (thumbnail) {
             if (isDataURL(thumbnail)) {
-                const thumbResult = await upload(thumbnail);
+                const thumbResult = await upload(thumbnail, {
+                    folder: 'travelife/tour',
+                    overwrite: true,
+                    invalidate: true,
+                    public_id: `${tourExisting.code}`
+                });
                 if (!thumbResult?.public_id)
                     throw new BadRequestError('File upload error');
                 payload.thumbnail = thumbResult?.secure_url;
             }
         }
         if (images) {
-            payload.images = await Promise.all(images.map(async img => {
+            payload.images = await Promise.all(images.map(async (img, i) => {
                 if (isDataURL(img)) {
-                    const imgResult = await upload(img);
+                    const imgResult = await upload(img, {
+                        folder: 'travelife/tour',
+                        overwrite: true,
+                        invalidate: true,
+                        public_id: `${tourExisting.code}-${i}`
+                    });
                     if (!imgResult?.public_id)
                         throw new BadRequestError('File upload error');
                     return imgResult?.secure_url;

@@ -1,5 +1,6 @@
 const { tourSchema, updateTourSchema } = require("../schemes/tour/tour");
 const TourService = require("../services/tour.service");
+const UploadService = require("../services/upload.service");
 const { BadRequestError } = require("../utils/error.response");
 const { SuccessResponse, NoContent } = require("../utils/sucess.response");
 

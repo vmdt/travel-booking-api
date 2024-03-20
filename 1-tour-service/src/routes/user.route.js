@@ -2,6 +2,7 @@ const express = require('express');
 const { protect, restrictTo } = require('../middlewares/auth.middleware');
 const userController = require('../controllers/user.controller');
 const asyncHandler = require('../helpers/async.handler');
+const { uploadDisk } = require('../helpers/multer');
 
 class UserRoutes {
     constructor() {
@@ -9,11 +10,12 @@ class UserRoutes {
     }
 
     routes() {
+        this.router.use(protect);
         this.router.route('/:userId')
                 .get(asyncHandler(userController.getUser))
                 .patch(asyncHandler(userController.updateUser));
 
-        this.router.use([protect, restrictTo('admin')])
+        this.router.use(restrictTo('admin'));
         this.router.route('/')
                 .get(asyncHandler(userController.getAllUsers));
         return this.router;

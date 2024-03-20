@@ -30,24 +30,6 @@ const getUserById = async (userId) => {
     return await UserModel.findById(userId);
 }
 
-const aggreUserProfile = async (userId) => {
-    return await UserModel.aggregate([
-        {
-            $match: { _id: new Types.ObjectId(userId) }
-        },
-        {
-            $lookup: {
-                from: 'profiles',
-                localField: '_id',
-                foreignField: 'user',
-                as: 'profile'
-            }
-        },
-        {
-            $unwind: '$profile'
-        }
-    ]);
-}
 
 const getUserByPasswordResetToken = async (token) => {
     return await UserModel.findOne({
@@ -66,6 +48,7 @@ const updateUserById = async ({ userId, update, isNew = true }) => {
     return user;
 }
 
+
 module.exports = {
     getUserByUsernameOrEmail,
     getUserByUsername,
@@ -73,6 +56,5 @@ module.exports = {
     getUserByVerificationToken,
     getUserById,
     getUserByPasswordResetToken,
-    updateUserById,
-    aggreUserProfile
+    updateUserById
 }

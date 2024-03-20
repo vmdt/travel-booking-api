@@ -19,8 +19,14 @@ const updateTourById = async (tourId, payload, isNew = true) => {
     return tour;
 }
 
+const getCodeByTourId = async (tourId) => {
+    const tour = await TourModel.findById(new Types.ObjectId(tourId)).lean();
+    return tour.code;
+}
+
 module.exports = {
     createTour,
     getAllTours,
-    updateTourById
+    updateTourById,
+    getCodeByTourId
 }

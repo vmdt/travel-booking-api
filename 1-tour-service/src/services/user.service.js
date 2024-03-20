@@ -2,6 +2,9 @@ const _ = require('lodash');
 const { Types } = require('mongoose');
 const UserModel = require('../models/user.model');
 const { getAll, updateOne, getOne } = require('../repositories/factory.repo');
+const { NotFoundError } = require('../utils/error.response');
+const { isDataURL } = require('../utils');
+const { upload } = require('../helpers/cloudinary');
 
 class UserService {
     static getAllUsers = async (query) => {
@@ -14,9 +17,23 @@ class UserService {
     }
 
     static updateUser = async (userId, payload) => {
+        const { profilePicture } = payload;
+        if (isDataURL(profilePicture)) {
+            const profileResult = await upload(profilePicture, {
+                public_id: `${userId}`,
+                folder: 'travelife/user',
+                overwrite: true,
+                invalidate: true
+            });
+            payload.profilePicture = profileResult?.secure_url;
+        }
+
         const user = await updateOne(UserModel, {
             _id: new Types.ObjectId(userId)
         }, payload);
+
+        if (!user)
+            throw new NotFoundError('Not found user');
 
         return { user: user.toObject() }
     }

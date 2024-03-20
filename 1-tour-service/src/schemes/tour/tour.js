@@ -15,10 +15,6 @@ const tourSchema = Joi.object().keys({
     summary: Joi.string().optional(),
     highlights: Joi.array().items(Joi.string()).optional(),
     description: Joi.string().optional(),
-    thumbnail: Joi.string().required().messages({
-        'string.base': 'Tour thumbnail must be of type string',
-        'string.empty': 'Tour thumbnail is a required field'
-    }),
     images: Joi.array().items(Joi.string()).optional(),
     category: Joi.string().messages({
         'string.base': 'Category must be type string of object id'
