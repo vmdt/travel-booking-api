@@ -33,7 +33,7 @@ class AuthController {
         if (error?.details)
             throw new BadRequestError(error.details[0].message);
 
-        await SuccessResponse({
+        new SuccessResponse({
             message: 'Change password successfully',
             metadata: await AuthService.changePassword(req.user._id, req.body)
         }).send(res);

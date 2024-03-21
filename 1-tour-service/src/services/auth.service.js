@@ -15,6 +15,8 @@ const {
     getUserByPasswordResetToken,
     updateUserById
 } = require('../repositories/user.repo');
+const { getOne } = require('../repositories/factory.repo');
+const { Types } = require('mongoose');
 const EXCHANGE_AUTH = 'travel-auth';
 const ROUTING_AUTH = 'auth';
 
