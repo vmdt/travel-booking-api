@@ -136,6 +136,30 @@ class AuthService {
         );
     }
 
+    static changePassword = async (userId, payload) => {
+        const { currentPassword, newPassword, newPasswordConfirm } = payload;
+        const userExisting = await getOne(UserModel, {
+            _id: new Types.ObjectId(userId)
+        }, false);
+        if (!userExisting)
+            throw new NotFoundError('Not found user');
+        const match = await userExisting.correctPassword(currentPassword);
+        if (!match)
+            throw new BadRequestError('Current password is incorrect');
+        userExisting.password = newPassword;
+        userExisting.passwordConfirm = newPasswordConfirm;
+        await userExisting.save();
+        const token = signToken({
+            id: userExisting._id,
+            role: userExisting.role
+        });
+
+        return { 
+            user: { ...omit(userExisting.toObject(), ['password']) },
+            accessToken: token
+        }
+    }
+
     static resetPassword = async ({ token, password, passwordConfirm }) => {
         const user = await getUserByPasswordResetToken(token);
         if (!user)

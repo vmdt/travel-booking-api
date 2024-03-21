@@ -5,11 +5,11 @@ class SearchService {
     static search = async (keyword) => {
         let suggestions = [];
         suggestions = await LocationModel.find({
-            title: { $regex: keyword, $options: 'i' }
+            title: { $regex: `^${keyword}`, $options: 'iu' }
         }).lean();
 
         if (suggestions.length <= 1) {
-            const regexSearch = new RegExp(keyword);
+            const regexSearch = new RegExp(`^${keyword}`, 'iu');
             const foundTours = await TourModel.find({
                 isActive: true,
                 $text: { $search: regexSearch }

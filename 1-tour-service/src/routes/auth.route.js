@@ -25,6 +25,7 @@ class AuthRoutes {
         this.router.put('/reset-password/:token', asyncHandler(authController.resetPassword));
 
         this.router.use(protect);
+        this.router.post('/change-password', asyncHandler(authController.changePassword));
         this.router.get('/send-verification', asyncHandler(authController.sendVerification));
         this.router.patch('/ban-user/:userId', restrictTo('admin'), asyncHandler(authController.banUser));
         this.router.patch('/active-user/:userId', restrictTo('admin'), asyncHandler(authController.unBanUser));

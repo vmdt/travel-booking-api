@@ -6,6 +6,7 @@ const { BadRequestError, AuthFailureError } = require("../utils/error.response")
 const { CREATED, SuccessResponse } = require("../utils/sucess.response");
 const { signToken } = require("../helpers/jwt");
 const { omit } = require('../utils');
+const { changePasswordSchema } = require("../schemes/user/password");
 
 class AuthController {
     handleGoogleAuth = async (req, res, next) => {
@@ -25,6 +26,17 @@ class AuthController {
         } else {
             throw new AuthFailureError('Unauthenticated');
         }
+    }
+
+    changePassword = async (req, res, next) => {
+        const { error } = await Promise.resolve(changePasswordSchema.validate(req.body));
+        if (error?.details)
+            throw new BadRequestError(error.details[0].message);
+
+        await SuccessResponse({
+            message: 'Change password successfully',
+            metadata: await AuthService.changePassword(req.user._id, req.body)
+        }).send(res);
     }
 
     signup = async (req, res, next) => {

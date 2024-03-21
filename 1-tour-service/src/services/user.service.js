@@ -2,7 +2,7 @@ const _ = require('lodash');
 const { Types } = require('mongoose');
 const UserModel = require('../models/user.model');
 const { getAll, updateOne, getOne } = require('../repositories/factory.repo');
-const { NotFoundError } = require('../utils/error.response');
+const { NotFoundError, BadRequestError } = require('../utils/error.response');
 const { isDataURL } = require('../utils');
 const { upload } = require('../helpers/cloudinary');
 
@@ -44,6 +44,7 @@ class UserService {
         }, true);
         return { user: _.omit(user, ['password']) }
     }
+
 }
 
 module.exports = UserService;
