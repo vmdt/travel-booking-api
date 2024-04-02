@@ -2,7 +2,7 @@ const LocationModel = require('../models/location.model');
 const TourModel = require('../models/tour.model');
 
 class SearchService {
-    static search = async (keyword) => {
+    static search = async (keyword, limit) => {
         let suggestions = [];
         suggestions = await LocationModel.find({
             title: { $regex: `^${keyword}`, $options: 'iu' }
@@ -18,6 +18,10 @@ class SearchService {
             .select('title thumbnail type startLocation').lean();
 
             suggestions.push(...foundTours);
+        }
+
+        if (limit && (limit*1) < suggestions.length) {
+            suggestions = suggestions.slice(0, limit*1);
         }
 
         return {

@@ -17,11 +17,14 @@ const createBooking = async ({ userId, discountCode, personalInfo, tourItems, ch
         const randomCharacters = randomBytes.toString('hex');
         let bookingItem = await BookingItemsModel.create({
             booking: booking._id,
-            tour: item.tour._id,
+            tour: item.tour,
             startDate: item.startDate,
             startTime: item.startTime,
             participants: item.participants,
-            ticketCode: randomCharacters
+            ticketCode: randomCharacters,
+            isPrivate: item.isPrivate,
+            transports: item.transports,
+            hotels: item.hotels
         });
         bookingItem = await bookingItem.populate({
             path: 'tour',

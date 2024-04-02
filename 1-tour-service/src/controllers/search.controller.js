@@ -5,7 +5,7 @@ class SearchController {
     search = async (req, res, next) => {
         new SuccessResponse({
             message: 'Searching was success',
-            metadata: await SearchService.search(req.params.keyword)
+            metadata: await SearchService.search(req.params.keyword, req.query.limit)
         }).send(res);
     }
 }

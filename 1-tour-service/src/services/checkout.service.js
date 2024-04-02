@@ -14,10 +14,12 @@ class CheckoutService {
         if (!cart)
             throw new NotFoundError('Not found cart');
 
-        await cart.populate({
+        await cart.populate([{
             path: 'tours.tour',
             select: 'title code numOfRating ratingAverage thumbnail',
-        });
+        }, {
+            path: 'tours.transports'
+        }]);
 
         let { tours } = cart;
         tours = tours.toObject();

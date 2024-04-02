@@ -36,7 +36,7 @@ class UploadService {
         return response;
     }
 
-    uploadUserImage = async (file, userId) => {
+    static uploadUserImage = async (file, userId) => {
         let dataURI;
         if (file && file.buffer) {
             const b64 = Buffer.from(file.buffer).toString('base64');

@@ -12,7 +12,10 @@ const addToCartSchema = Joi.object().keys({
             quantity: Joi.number().greater(0),
             price: Joi.number().greater(0),
             currency: Joi.string()
-        }))
+        })),
+        isPrivate: Joi.boolean(),
+        transports: Joi.array().items(Joi.string()),
+        hotels: Joi.array().items(Joi.string())
     })
 });
 
@@ -28,7 +31,10 @@ const updateCartSchema = Joi.object().keys({
             quantity: Joi.number().greater(0),
             price: Joi.number().greater(0),
             currency: Joi.string()
-        }))
+        })),
+        isPrivate: Joi.boolean(),
+        transports: Joi.array().items(Joi.string()),
+        hotels: Joi.array().items(Joi.string())
     })
 });
 

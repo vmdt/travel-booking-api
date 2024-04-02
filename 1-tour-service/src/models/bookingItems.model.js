@@ -6,9 +6,9 @@ const BookingItems = new mongoose.Schema({
         ref: 'Booking'
     },
     tour: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Tour'
+        type: mongoose.Schema.Types.Mixed
     },
+    isPrivate: { type: Boolean, default: false },
     startDate: Date,
     endDate: Date,
     startTime: String,
@@ -18,7 +18,13 @@ const BookingItems = new mongoose.Schema({
         price: { type: Number, default: 0 },
         currency: { type: String, default: 'VND' }
     }],
-    ticketCode: String
+    ticketCode: String,
+    transports: [{
+        type: mongoose.Schema.Types.Mixed
+    }],
+    hotels: [{
+        type: mongoose.Schema.Types.Mixed
+    }]
 }, {
     collection: 'booking_items'
 });
