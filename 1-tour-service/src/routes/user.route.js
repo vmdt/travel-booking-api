@@ -13,9 +13,12 @@ class UserRoutes {
         this.router.use(protect);
         this.router.route('/:userId')
                 .get(asyncHandler(userController.getUser))
-                .patch(asyncHandler(userController.updateUser));
+                
 
         this.router.use(restrictTo('admin'));
+        this.router.route('/:userId')
+                .patch(asyncHandler(userController.updateUser));
+
         this.router.route('/')
                 .get(asyncHandler(userController.getAllUsers));
         return this.router;

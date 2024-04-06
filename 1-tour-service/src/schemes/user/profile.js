@@ -14,7 +14,11 @@ const profileSchema = Joi.object().keys({
     passport: Joi.string().optional(),
     dateOfIssuePassport: Joi.string().optional(),
     dateOfExpirationPassport: Joi.string().optional(),
-    profilePicture: Joi.string().optional()
+    profilePicture: Joi.string().optional(),
+    username: Joi.string().optional(),
+    email: Joi.string().optional().email(),
+    role: Joi.string().optional(),
+    typeAuth: Joi.string().optional()
 });
 
 module.exports = profileSchema;
