@@ -1,5 +1,6 @@
 const { Types } = require('mongoose');
 const CartModel = require('../models/cart.model');
+const HotelModel = require('../models/hotel.model');
 const TourModel = require('../models/tour.model');
 const { BadRequestError, NotFoundError } = require('../utils/error.response');
 
@@ -55,6 +56,11 @@ class CartService {
             cart = await CartModel.create({
                 user: userId
             });
+
+        cart = await cart.populate([{
+            path: "tours.tour",
+            select: "title code thumbnail"
+        }, { path: "tours.transports" }, { path: "tours.hotels" }]);
         
         return { cart }
     }
