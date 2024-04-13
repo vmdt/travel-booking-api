@@ -27,9 +27,16 @@ const deleteCartItems = async (cartId, tourIds) => {
             tours: []
         });
     else 
-        cart = await CartModel.findByIdAndUpdate(cartId, {
-            $pull: { tours: { tour: { $in: [...tourIds] }}}
-        });
+        tourIds.forEach(async item => {
+            cart = await CartModel.findByIdAndUpdate(cartId, {
+                $pull: {
+                    tours: {
+                        tour: new Types.ObjectId(item.tour),
+                        startDate: new Date(item.startDate)
+                    }
+                }
+            });
+        })
     return cart;
 }
 

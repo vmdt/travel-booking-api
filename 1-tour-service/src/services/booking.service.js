@@ -54,7 +54,6 @@ class BookingService {
                 checkoutOrder,
                 personalInfo
             });
-
             await deleteCartItems(cartId, tourIds);
             delayOrderJob(booking._id, keyLocks, 1000*60*DELAY_ORDER_TIME);
             return { booking };
@@ -72,9 +71,11 @@ class BookingService {
             });
             if (!addedCart)
                 throw new BadRequestError('Book now error, please try again');
-            cartId = addedCart._id;
+            cartId = addedCart.cart._id;
+        } else {
+            cartId = itemExisting._id;
         }
-        cartId = itemExisting._id;
+        
         return {
             cart: cartId,
             tours: [{
