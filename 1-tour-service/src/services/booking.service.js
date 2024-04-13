@@ -7,7 +7,9 @@ const { createBooking, aggregateItems, deleteBooking } = require("../repositorie
 const { delayOrderJob } = require("../queues/order.producer");
 const { getAll } = require("../repositories/factory.repo");
 const BookingItemsModel = require("../models/bookingItems.model");
-const { deleteCartItems } = require("../repositories/cart.repo");
+const { deleteCartItems, checkTourExist } = require("../repositories/cart.repo");
+const { result } = require("lodash");
+const CartService = require("./cart.service");
 
 const DELAY_ORDER_TIME = 5; //minutes
 
@@ -59,6 +61,28 @@ class BookingService {
         } catch (error) {
             throw error;
         }
+    }
+
+    static bookNow = async ({ user, tour }) => {
+        let cartId;
+        let itemExisting = (await checkTourExist(user, tour.tour, tour.startDate))[0];
+        if (!itemExisting) {
+            const addedCart = await CartService.addToCart({
+                user, tour
+            });
+            if (!addedCart)
+                throw new BadRequestError('Book now error, please try again');
+            cartId = addedCart._id;
+        }
+        cartId = itemExisting._id;
+        return {
+            cart: cartId,
+            tours: [{
+                tour: tour.tour,
+                startDate: tour.startDate
+            }]
+        }
+        
     }
 
     static getListBookings = async (query) => {

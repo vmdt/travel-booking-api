@@ -20,6 +20,13 @@ class BookingController {
             })
         }).send(res);
     }
+
+    bookNow = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'Book now successfully',
+            metadata: await BookingService.bookNow(req.body)
+        }).send(res);
+    }
     
     getListBookings = async (req, res, next) => {
         new SuccessResponse({

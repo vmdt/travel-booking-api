@@ -39,7 +39,7 @@ const updateCartSchema = Joi.object().keys({
 });
 
 const deleteItemSchema = Joi.object().keys({
-    user: Joi.string().optional(),
+    cart: Joi.string().optional(),
     itemId: Joi.string().optional()
 });
 

@@ -1,3 +1,4 @@
+const { Types } = require('mongoose');
 const CartModel = require('../models/cart.model');
 
 const getTotalPrice = (tours) => {
@@ -9,6 +10,15 @@ const getTotalPrice = (tours) => {
     });
     return results;
 }
+
+const checkTourExist = async (userId , tourId, startDate) => {
+    const result = await CartModel.find({
+        user: new Types.ObjectId(userId),
+        tours: { $elemMatch: { tour: new Types.ObjectId(tourId), startDate: new Date(startDate) } }
+    });
+    return result;
+}
+
 
 const deleteCartItems = async (cartId, tourIds) => {
     let cart;
@@ -33,5 +43,6 @@ const rollbackCartItems = async (cartId, tourItems) => {
 module.exports = {
     getTotalPrice,
     deleteCartItems,
-    rollbackCartItems
+    rollbackCartItems,
+    checkTourExist
 }

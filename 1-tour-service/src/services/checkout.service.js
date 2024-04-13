@@ -23,8 +23,16 @@ class CheckoutService {
 
         let { tours } = cart;
         tours = tours.toObject();
-        if (tourIds)
-            tours = tours.filter(item => tourIds.includes(item.tour._id.toString()));
+        if (tourIds && tourIds.length > 0)
+            tours = tours.filter(item => {
+                for (let i=0; i<tourIds.length; i++) {
+                    if (tourIds[i].tour == item.tour._id.toString() 
+                        &&
+                        tourIds[i].startDate == item.startDate.toISOString().substring(0, 10))
+                        return true;
+                }
+                return false;
+            });
         let checkoutOrder = {
             totalOrder: 0,
             discount: 0,

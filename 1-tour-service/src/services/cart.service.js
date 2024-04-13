@@ -3,6 +3,7 @@ const CartModel = require('../models/cart.model');
 const HotelModel = require('../models/hotel.model');
 const TourModel = require('../models/tour.model');
 const { BadRequestError, NotFoundError } = require('../utils/error.response');
+const { checkTourExist } = require('../repositories/cart.repo');
 
 class CartService {
     static addToCart = async ({ user, tour }) => {
@@ -14,6 +15,10 @@ class CartService {
         }, options = { upsert: true, new: true };
         if (new Date(tour.startDate) < new Date().setHours(0, 0, 0, 0))
             throw new BadRequestError('Invalid starting date');
+
+        const itemExisting = await checkTourExist(user, tour.tour, tour.startDate)
+        if (itemExisting.length > 0)
+            throw new BadRequestError('Tour item already exist');
         const cart = await CartModel.findOneAndUpdate(query, updateOrInsert, options);
 
         return { cart: cart.toObject() }
@@ -38,8 +43,8 @@ class CartService {
         return { cart }
     }
 
-    static deleteCartItem = async ({ userId, itemId }) => {
-        const query = { user: userId, status: 'active' },
+    static deleteCartItem = async ({ cartId, itemId }) => {
+        const query = { _id: new Types.ObjectId(cartId), status: 'active' },
         updateSet = { $pull: { tours: { _id: itemId } } };
 
         const cart = await CartModel.findOneAndUpdate(query, updateSet, { new: true });

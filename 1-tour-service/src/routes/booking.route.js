@@ -10,6 +10,8 @@ class BookingRoutes {
 
     routes() {
         this.router.use(protect);
+        this.router.post('/book-now', asyncHandler(bookingController.bookNow));
+
         this.router.route('/:bookingId')
             .get(asyncHandler(bookingController.getBookingDetails))
             .delete(asyncHandler(bookingController.deleteBooking));
