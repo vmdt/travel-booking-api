@@ -31,23 +31,51 @@ class CartService {
             'tours._id': itemId,
             status: 'active' 
         };
-        if (tour.startDate < new Date().setHours(0, 0, 0, 0))
+
+        if (tour.startDate && tour.startDate < new Date().setHours(0, 0, 0, 0))
             throw new BadRequestError('Invalid starting date');
-        const cart = await CartModel.findOneAndUpdate(query, {
-            'tours.$': restTour
-        }, { new: true });
+        
+        let cart = await CartModel.findOne(query);
+        
+        // console.log(cart.tours['_id'])
 
-        if (!cart)
-            throw new NotFoundError('Not found tour item');
+        // if (!cart)
+        //     throw new NotFoundError('Not found tour item');
+        // Object.keys(restTour).forEach(async key => {
+        //     cart = await CartModel.findOneAndUpdate(query, {
+        //         $set: {
+        //             [`tours.$.${key}`]: restTour[key]
+        //         }
+        //     });
+        // });
+        let update = {};
+        for (const key in restTour) {
+            if (Object.hasOwnProperty.call(restTour, key)) {
+              update[`tours.$.${key}`] = restTour[key];
+            }
+        }
 
-        return { cart }
+        const updatedCart = await CartModel.findOneAndUpdate(query, update, { new: true });
+
+        // await cart.save();
+
+        // if (tour.startDate < new Date().setHours(0, 0, 0, 0))
+        //     throw new BadRequestError('Invalid starting date');
+        // const cart = await CartModel.findOneAndUpdate(query, {
+        //     'tours.$': restTour
+        // }, { new: true });
+
+        // if (!cart)
+        //     throw new NotFoundError('Not found tour item');
+
+        return { updatedCart }
     }
 
     static deleteCartItem = async ({ cartId, itemId }) => {
         const query = { _id: new Types.ObjectId(cartId), status: 'active' },
         updateSet = { $pull: { tours: { _id: itemId } } };
 
-        const cart = await CartModel.findOneAndUpdate(query, updateSet, { new: true });
+        const cart = await CartModel.findOneAndUpdate(query, updateSet);
         return { cart }
     }
 
