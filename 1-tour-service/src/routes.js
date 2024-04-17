@@ -12,6 +12,7 @@ const paymentRoutes = require('./routes/payment.route');
 const searchRoutes = require('./routes/search.route');
 const uploadRoutes = require('./routes/upload.route');
 const hotelRoutes = require('./routes/hotel.route');
+const reviewRoutes = require('./routes/review.route');
 
 const BASE_AUTH_URL = '/api/v1/auth';
 const BASE_USER_URL = '/api/v1/users';
@@ -27,6 +28,7 @@ const BASE_PAYMENT_URL = '/api/v1/payment';
 const BASE_SEARCH_URL = '/api/v1/search';
 const BASE_UPLOAD_URL = '/api/v1/upload';
 const BASE_HOTEL_URL = '/api/v1/hotels';
+const BASE_REVIEW_URL = '/api/v1/reviews';
 
 const appRoutes = (app) => {
     app.use(BASE_USER_URL, userRoutes.routes());
@@ -43,6 +45,7 @@ const appRoutes = (app) => {
     app.use(BASE_SEARCH_URL, searchRoutes.routes());
     app.use(BASE_UPLOAD_URL, uploadRoutes.routes());
     app.use(BASE_HOTEL_URL, hotelRoutes.routes());
+    app.use(BASE_REVIEW_URL, reviewRoutes.routes());
 }
 
 module.exports = appRoutes;
