@@ -4,6 +4,7 @@ const UserModel = require("../models/user.model");
 const TourModel = require('../models/tour.model');
 const { getOne, createOne, getAll, getMany, updateOne, deleteOne } = require("../repositories/factory.repo");
 const { NotFoundError } = require('../utils/error.response');
+const { aggregateReview } = require('../repositories/review.repo');
 
 class ReviewService {
     static createReview = async (payload) => {
@@ -80,6 +81,13 @@ class ReviewService {
         }, { approve: true });
         if (!review)
             throw new NotFoundError('Not found review');
+
+        const aggreateReview = await aggregateReview(review.tour);
+        // update rating for tour
+        await updateOne(TourModel, { _id: review.tour }, {
+            numOfRating: aggreateReview[0].numOfRating,
+            ratingAverage: aggreateReview[0].ratingAverage
+        });
 
         review = await review.populate(popOptions);
         return { review };
