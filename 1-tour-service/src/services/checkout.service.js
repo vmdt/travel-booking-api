@@ -37,17 +37,22 @@ class CheckoutService {
             totalOrder: 0,
             discount: 0,
             totalPrice: 0
-        };
+        }, itemPrices = undefined;
+        
+
         const toursWithTotalPrice = getTotalPrice(tours);
 
         if (discount) {
             const amountPayload = toursWithTotalPrice.map( item => {
                 return { tourId: item.tour._id, totalPrice: item.totalPrice }
             });
-            checkoutOrder = await DiscountService.getDiscountAmount({
+            
+            const amount = await DiscountService.getDiscountAmount({
                 code: discount,
                 tours: amountPayload
             });
+            itemPrices = amount.itemPrices;
+            checkoutOrder = amount.checkoutOrder;
         } else {
             const total = toursWithTotalPrice.reduce( (acc, tour) => {
                 return acc + tour.totalPrice;
@@ -58,7 +63,8 @@ class CheckoutService {
 
         return {
             checkoutReview: tours,
-            checkoutOrder
+            checkoutOrder,
+            itemPrices
         }
     }
 

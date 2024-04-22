@@ -90,7 +90,7 @@ class DiscountService {
             throw new BadRequestError('Discount has been deactivated');
 
         return {
-            discount: discount.toObject()
+            discount: discount
         }
     }
 
@@ -129,7 +129,7 @@ class DiscountService {
         const discountExisting = await DiscountModel.findOne({ code }).lean();
         if (!discountExisting)
             throw new NotFoundError('Not found discount');
-
+        
         const {
             isActive, startDate, endDate,
             maxUses, usedCount, minOrder,
@@ -152,24 +152,33 @@ class DiscountService {
         
         if (totalOrder < minOrder)
             throw new BadRequestError(`Discount require min order of ${minOrder}`);
-        let amount = 0;
+        let amount = 0, discountTours = [], discountPrice;
         if (appliesTo === 'specific') {
             tours.forEach((tour) => {
                 const match = discountExisting.tours.some(el => {
-                    return el.toString() === tour.tourId;
+                    return el.toString() === tour.tourId.toString();
                 });
                 if (match) {
-                    amount += type === 'fixed_amount' ? value : tour.totalPrice * (value/100);
+                    discountPrice = type === 'fixed_amount' ? value : tour.totalPrice * (value/100);
+                    amount += discountPrice;
+                    tour.discountPrice = discountPrice;
+                    discountTours.push({ tour });
                 }
             })
         } else {
-            amount += type === 'fixed_amount' ? value : totalOrder * (value/100);
+            discountPrice = type === 'fixed_amount' ? value : tour.totalPrice * (value/100);
+            amount += discountPrice;
+            tour.discountPrice = discountPrice;
+            discountTours.push({ tour });
         }
 
         return {
-            totalOrder,
-            discount: amount,
-            totalPrice: totalOrder - amount
+            itemPrices: discountTours,
+            checkoutOrder: {
+                totalOrder,
+                discount: amount,
+                totalPrice: totalOrder - amount
+            }
         };
     }
 }
