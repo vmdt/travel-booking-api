@@ -29,6 +29,15 @@ class UploadController {
             metadata: await UploadService.uploadTourImages(files, code)
         }).send(res);
     }
+
+    uploadImage = async (req, res, next) => {
+        const { file } = req;
+
+        new SuccessResponse({
+            message: 'Upload image successfully',
+            metadata: await UploadService.uploadImage(file, req.params.folder)
+        }).send(res);
+    }
 }
 
 module.exports = new UploadController();

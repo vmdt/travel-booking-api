@@ -56,6 +56,26 @@ class UploadService {
 
         return { profilePictureURL: uploadResult.secure_url }
     }
+
+    static uploadImage = async (file, folder) => {
+        let dataURI;
+        if (file && file.buffer) {
+            const b64 = Buffer.from(file.buffer).toString('base64');
+            dataURI = "data:" + file.mimetype + ";base64," + b64;
+        } else {
+            throw new NotFoundError('Not found image data');
+        }
+
+        const uploadResult = await upload(dataURI, {
+            folder: `travelife/${folder}`,
+            overwrite: true,
+            invalidate: true,
+        });
+
+        return {
+            imageURL: uploadResult.secure_url
+        }
+    }
 }
 
 module.exports = UploadService;

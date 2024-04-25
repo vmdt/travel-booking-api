@@ -10,6 +10,10 @@ class CategoryRoutes {
 
     routes() {
         this.router.get('/:cateId', asyncHandler(categoryController.getCategoryById));
+
+        this.router.route('/:cateId')
+                    .patch(protect, restrictTo('admin'), asyncHandler(categoryController.updateCategory))
+                    .delete(protect, restrictTo('admin'), asyncHandler(categoryController.deleteCategory))
         this.router.route('/')
                     .post(protect, restrictTo('admin'), asyncHandler(categoryController.createCategory))
                     .get(asyncHandler(categoryController.getAllCategories))

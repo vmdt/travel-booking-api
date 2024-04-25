@@ -11,6 +11,7 @@ class UploadRoutes {
 
     routes() {
         this.router.use(asyncHandler(protect));
+        
         this.router.post('/user/:userId', 
             uploadMemory.single('profilePicture'), 
             asyncHandler(uploadController.uploadUserImage));
@@ -21,6 +22,10 @@ class UploadRoutes {
                 { name: 'images', maxCount: 20 }
             ]),
             asyncHandler(uploadController.uploadTourImages));
+
+        this.router.post('/image/:folder',
+            uploadMemory.single('image'),
+            asyncHandler(uploadController.uploadImage));
         return this.router;
     }
 }
