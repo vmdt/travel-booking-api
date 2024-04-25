@@ -28,6 +28,18 @@ class DiscountService {
         return { discount }
     }
 
+    static searchDiscount = async (code) => {
+        const foundDiscounts = await DiscountModel.find({
+            isActive: true,
+            code: { $regex:`^${code}`, $options: 'iu' }
+        }).lean();
+
+        return {
+            result: foundDiscounts.length,
+            discounts: foundDiscounts
+        }
+    }
+
     static getAllDiscounts = async (query) => {
         const discounts = await getAll(DiscountModel, query);
         return {

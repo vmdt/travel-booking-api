@@ -84,6 +84,13 @@ class DiscountController {
             metadata: await DiscountService.updateDiscount(req.params.discountId, req.body)
         }).send(res);
     }
+
+    searchDiscount = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'Searching discount successfully',
+            metadata: await DiscountService.searchDiscount(req.params.code)
+        }).send(res);
+    }
 }
 
 module.exports = new DiscountController();

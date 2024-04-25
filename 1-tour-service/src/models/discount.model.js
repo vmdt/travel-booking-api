@@ -15,4 +15,6 @@ const Discount = new mongoose.Schema({
     tours: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Tour' }]
 });
 
+Discount.index({ code: 'text' });
+
 module.exports = mongoose.model('Discount', Discount);
