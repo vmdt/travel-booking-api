@@ -45,6 +45,16 @@ class TransportController {
             metadata: await TransportService.deleteTransport(req.params.transId)
         }).send(res);
     }
+
+    searchTransport = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'Search transportation succcessfully',
+            metadata: await TransportService.searchTransport({
+                keyword: req.params.keyword,
+                query: req.query
+            })
+        }).send(res);
+    }
 }
 
 module.exports = new TransportController();

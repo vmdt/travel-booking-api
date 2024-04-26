@@ -9,6 +9,8 @@ class TransportRoutes {
     }
 
     routes() {
+        this.router.get('/search/:keyword', asyncHandler(transportController.searchTransport));
+
         this.router.route('/:transId')
                     .get(asyncHandler(transportController.getTransportById))
                     .patch(protect, restrictTo('admin'), asyncHandler(transportController.updateTransport))

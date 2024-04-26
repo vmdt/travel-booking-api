@@ -1,8 +1,9 @@
 const { Types } = require('mongoose');
 const TransportModel = require('../models/transportation.model');
-const { createOne, getOne, getAll, updateOne, deleteOne } = require("../repositories/factory.repo");
+const { createOne, getOne, getAll, updateOne, deleteOne, getMany } = require("../repositories/factory.repo");
 const { BadRequestError, NotFoundError } = require('../utils/error.response');
 const { filterOut } = require('../utils');
+const { query } = require('express');
 
 class TransportService {
     static createTransport = async ({ name, capacity, brand, image, isActive = true }) => {
@@ -58,6 +59,17 @@ class TransportService {
         return null;
     }
 
+    static searchTransport = async ({ keyword, query }) => {
+        const foundTransports = await getMany(TransportModel, {
+            name: { $regex: keyword, $options: 'i' },
+            isActive: true
+        }, query);
+
+        return {
+            result: foundTransports.length,
+            transportations: foundTransports
+        }
+    }
 }
 
 module.exports = TransportService;

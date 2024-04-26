@@ -8,4 +8,6 @@ const Transportation = new mongoose.Schema({
     isActive: Boolean,
 });
 
+Transportation.index({ name: 'text' });
+
 module.exports = mongoose.model('Transportation', Transportation);
