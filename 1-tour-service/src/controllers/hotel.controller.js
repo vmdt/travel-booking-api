@@ -15,6 +15,30 @@ class HotelController {
             metadata: await HotelService.getAllHotels(req.query)
         }).send(res);
     }
+
+    updateHotel = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'Update hotel successfully',
+            metadata: await HotelService.updateHotel(req.params.hotelId, req.body)
+        }).send(res);
+    }
+
+    deleteHotel = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'Delete hotel successfully',
+            metadata: await HotelService.deleteHotel(req.params.hotelId)
+        }).send(res);
+    }
+
+    searchHotel = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'Search hotel successfully',
+            metadata: await HotelService.searchHotel({
+                keyword: req.params.keyword,
+                query: req.query
+            })
+        }).send(res);
+    }
 }
 
 module.exports = new HotelController();

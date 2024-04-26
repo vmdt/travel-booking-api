@@ -9,6 +9,11 @@ class HotelRoutes {
     }
 
     routes() {
+        this.router.get('/search/:keyword', asyncHandler(hotelController.searchHotel));
+        this.router.route('/:hotelId')
+                .patch(protect, restrictTo('admin'), asyncHandler(hotelController.updateHotel))
+                .delete(protect, restrictTo('admin'), asyncHandler(hotelController.deleteHotel))
+
         this.router.route('/')
                     .get(asyncHandler(hotelController.getAllHotels))
                     .post(protect, restrictTo('admin'), asyncHandler(hotelController.createHotel))

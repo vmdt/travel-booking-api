@@ -16,4 +16,6 @@ const Hotel = new mongoose.Schema({
     }]
 });
 
+Hotel.index({ name: 'text' });
+
 module.exports = mongoose.model('Hotel', Hotel);
