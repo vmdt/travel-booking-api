@@ -12,7 +12,7 @@ class LocationRoutes {
         this.router.get('/search/:keyword', asyncHandler(locationController.searchLocation));
         this.router.route('/:locId')
                     .get(asyncHandler(locationController.getLocationById))
-                    .patch(protect, restrictTo('admin'), asyncHandler(locationController.updateLocation))
+                    .post(protect, restrictTo('admin'), asyncHandler(locationController.updateLocation))
                     .delete(protect, restrictTo('admin'), asyncHandler(locationController.deleteLocation));
 
         this.router.route('/')

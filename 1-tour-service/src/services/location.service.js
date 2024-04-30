@@ -6,7 +6,7 @@ const { BadRequestError } = require('../utils/error.response');
 class LocationService {
     static searchLocation = async ({ keyword }) => {
         const foundLocations = await LocationModel.find({
-            name: { $regex: keyword, $options: 'i' }
+            title: { $regex: keyword, $options: 'i' }
         });
         return {
             result: foundLocations.length,
@@ -30,9 +30,7 @@ class LocationService {
         const location = await getOne(LocationModel, { _id: new Types.ObjectId(locId) });
         if (!location)
             throw new BadRequestError('Not found location');
-        return {
-            location
-        }
+        return location
     }
 
     static getAllLocations = async (query) => {

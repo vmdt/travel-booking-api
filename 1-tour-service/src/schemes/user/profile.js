@@ -6,6 +6,7 @@ const profileSchema = Joi.object().keys({
         'string.min': 'Fullname must be at least 2 characters',
         'string.max': 'Fullname must be under 20 characters'
     }).optional(),
+    isActive: Joi.boolean().optional(),
     gender: Joi.string().optional(),
     dateOfBirth: Joi.string().optional(),
     address: Joi.string().optional(),

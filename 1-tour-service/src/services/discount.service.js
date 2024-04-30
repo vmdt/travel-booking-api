@@ -101,9 +101,7 @@ class DiscountService {
         if (!discount.isActive)
             throw new BadRequestError('Discount has been deactivated');
 
-        return {
-            discount: discount
-        }
+        return discount;
     }
 
     static updateDiscount = async (discountId, payload) => {

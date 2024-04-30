@@ -13,7 +13,7 @@ class TransportRoutes {
 
         this.router.route('/:transId')
                     .get(asyncHandler(transportController.getTransportById))
-                    .patch(protect, restrictTo('admin'), asyncHandler(transportController.updateTransport))
+                    .post(protect, restrictTo('admin'), asyncHandler(transportController.updateTransport))
                     .delete(protect, restrictTo('admin'), asyncHandler(transportController.deleteTransport))
 
         this.router.route('/')

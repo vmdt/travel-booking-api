@@ -23,7 +23,7 @@ class TourRoutes {
         this.router.post('/activate/:tourId', asyncHandler(tourController.activateTour));
         this.router.post('/deactivate/:tourId', asyncHandler(tourController.deactivateTour));
         this.router.route('/:tourId')
-                    .patch(asyncHandler(tourController.updateTour))
+                    .post(asyncHandler(tourController.updateTour))
                     .delete(asyncHandler(tourController.deleteTour));
         this.router.route('/')
                     .post(asyncHandler(tourController.createTour));

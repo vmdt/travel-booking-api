@@ -13,7 +13,7 @@ class TourService {
         const tour = await getOne(TourModel, {
             _id: new Types.ObjectId(tourId)
         }, true, 'category locations transports');
-        return { tour };
+        return tour;
     }
 
     static getToursWithin = async ({ distance, latlng, unit }) => {

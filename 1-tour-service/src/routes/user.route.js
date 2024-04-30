@@ -17,7 +17,7 @@ class UserRoutes {
 
         this.router.use(restrictTo('admin'));
         this.router.route('/:userId')
-                .patch(asyncHandler(userController.updateUser));
+                .post(asyncHandler(userController.updateUser));
 
         this.router.route('/')
                 .get(asyncHandler(userController.getAllUsers));

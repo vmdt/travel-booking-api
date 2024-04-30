@@ -19,7 +19,7 @@ class DiscountRoutes {
         this.router.use(protect)
         this.router.get('/search/:code', restrictTo('admin'), asyncHandler(discountController.searchDiscount));
         this.router.route('/:discountId')
-                    .patch(restrictTo('admin'), asyncHandler(discountController.updateDiscount))
+                    .post(restrictTo('admin'), asyncHandler(discountController.updateDiscount))
                     .get(asyncHandler(discountController.getDiscountById))
         
         this.router.route('/')
