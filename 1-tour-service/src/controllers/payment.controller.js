@@ -1,6 +1,7 @@
 const VNPayService = require("../services/vnpay.service");
 const BookingModel = require('../models/booking.model');
 const { SuccessResponse } = require("../utils/sucess.response");
+const config = require("../config");
 
 class PaymentController {
     getVnpayResult = async (req, res, next) => {
@@ -36,10 +37,12 @@ class PaymentController {
             message = 'Payment failed';
         }
         
-        res.send(`
+        res
+        .set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+        .send(`
             <script>
                 alert('${message}');
-                window.open('${result.data.clientURL}/booking/${result.data.bookingId}', '_self', '')
+                window.open('${config.CLIENT_URL}/booking/${result.data.bookingId}', '_self', '')
             </script>
         `);
     }

@@ -3,6 +3,7 @@ const dateFormat = require('dateformat');
 const queryString = require('query-string');
 const config = require("../config");
 const { sortObject } = require("../utils");
+const { configDotenv } = require('dotenv');
 
 class VNPayService {
     static createPaymentURL = async ({ 
@@ -11,14 +12,14 @@ class VNPayService {
     }) => {
         const returnURL = `${apiURL}/api/v1/payment/vnpay/callback`;
         const date = new Date();
-        const createDate = dateFormat(date, 'yyyymmddHHmmss');
-        const txnRef = dateFormat(date, 'HHmmss');
+        const createDate = dateFormat(date, 'yyyymmddHHMMss');
+        const txnRef = dateFormat(date, 'HHMMss');
 
         let locale = 'vn';
         if (language && ['vn', 'en'].indexOf(language) >= 0) {
           locale = language;
-        }
-
+        }   
+        
         const currCode = 'VND';
         let vnp_Params = {};
         vnp_Params['vnp_Version'] = '2.1.0';
