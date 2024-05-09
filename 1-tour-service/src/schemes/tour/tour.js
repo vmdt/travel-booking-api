@@ -14,6 +14,7 @@ const tourSchema = Joi.object().keys({
     }),
     summary: Joi.string().optional(),
     highlights: Joi.array().items(Joi.string()).optional(),
+    thumbnail: Joi.string().optional(),
     description: Joi.string().optional(),
     images: Joi.array().items(Joi.string()).optional(),
     category: Joi.string().messages({

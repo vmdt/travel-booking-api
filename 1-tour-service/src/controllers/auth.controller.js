@@ -7,6 +7,8 @@ const { CREATED, SuccessResponse } = require("../utils/sucess.response");
 const { signToken } = require("../helpers/jwt");
 const { omit } = require('../utils');
 const { changePasswordSchema } = require("../schemes/user/password");
+const config = require("../config");
+
 
 class AuthController {
     handleGoogleAuth = async (req, res, next) => {
@@ -16,13 +18,26 @@ class AuthController {
                 id: user._id,
                 role: user.role
             });
-            new SuccessResponse({
-                message: 'Log in by google successfully',
-                metadata: {
-                    user: omit(user.toObject(), ['googleId']),
-                    accessToken: token
-                }
-            }).send(res);
+            // const data = {
+            //     user: omit(user.toObject(), ['googleId']),
+            //     accessToken: token
+            // }
+            // new SuccessResponse({
+            //     message: 'Log in by google successfully',
+            //     metadata: {
+            //         user: omit(user.toObject(), ['googleId']),
+            //         accessToken: token
+            //     }
+            // }).send(res);
+            const responseURL = `${config.CLIENT_URL}?userId=${user._id.toString()}&accessToken=${token}`;
+
+            res
+            .set("Content-Security-Policy", "default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'")
+            .send(`
+                <script>
+                    window.open('${responseURL}', '_self', '')
+                </script>
+            `);
         } else {
             throw new AuthFailureError('Unauthenticated');
         }
