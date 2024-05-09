@@ -5,10 +5,7 @@ const Booking = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
-    discount: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Discount'
-    },
+    discount: String,
     status: {
         type: String,
         enum: ['pending', 'completed', 'cancelled'],
