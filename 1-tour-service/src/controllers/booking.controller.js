@@ -48,6 +48,13 @@ class BookingController {
             metadata: await BookingService.deleteBooking(req.params.bookingId)
         }).send(res);
     }
+
+    getListBookingsByUser = async (req, res, next) => {
+        new SuccessResponse({
+            message: 'Get list bookings successfully',
+            metadata: await BookingService.getListBookingsByUser(req.user._id, req.query)
+        }).send(res);
+    }
 }
 
 module.exports = new BookingController();

@@ -11,6 +11,7 @@ class BookingRoutes {
     routes() {
         this.router.use(protect);
         this.router.post('/book-now', asyncHandler(bookingController.bookNow));
+        this.router.get('/list', asyncHandler(bookingController.getListBookingsByUser));
 
         this.router.route('/:bookingId')
             .get(asyncHandler(bookingController.getBookingDetails))

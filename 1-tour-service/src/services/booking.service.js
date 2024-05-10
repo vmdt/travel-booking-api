@@ -5,11 +5,12 @@ const BookingModel = require('../models/booking.model');
 const TourAvailabilitiesModel = require('../models/tourAvailabilities.model');
 const { createBooking, aggregateItems, deleteBooking } = require("../repositories/booking.repo");
 const { delayOrderJob } = require("../queues/order.producer");
-const { getAll } = require("../repositories/factory.repo");
+const { getAll, getMany } = require("../repositories/factory.repo");
 const BookingItemsModel = require("../models/bookingItems.model");
 const { deleteCartItems, checkTourExist } = require("../repositories/cart.repo");
 const { result } = require("lodash");
 const CartService = require("./cart.service");
+const { Types } = require("mongoose");
 
 const DELAY_ORDER_TIME = 5; //minutes
 
@@ -92,6 +93,20 @@ class BookingService {
             select: 'username email',
         };
         const bookings = await getAll(BookingModel, query, true, popOptions);
+        return {
+            result: bookings.length,
+            bookings
+        }
+    }
+
+    static getListBookingsByUser = async (userId, query) => {
+        const popOptions = {
+            path: 'user',
+            select: 'username email',
+        };
+        const bookings = await getMany(BookingModel, {
+            user: new Types.ObjectId(userId)
+        }, query, true, popOptions);
         return {
             result: bookings.length,
             bookings
