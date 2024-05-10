@@ -70,26 +70,6 @@ const aggregateItems = async (bookingId) => {
                 from: 'booking_items',
                 localField: '_id',
                 foreignField: 'booking',
-                let: { tour: '$tour' },
-                pipeline: [
-                    {
-                        $lookup: {
-                            from: 'tours',
-                            localField: 'tour',
-                            foreignField: '_id',
-                            as: 'tour'
-                        }
-                    },
-                    { $unwind: '$tour' }, 
-                    {
-                        $project: {
-                            'tour.title': 1, 'tour.code': 1, 'tour.numOfRating': 1,
-                            'tour.ratingAverage': 1, 'tour.thumbnail': 1, 'tour._id': 1,
-                            startDate: 1, startTime: 1, endDate: 1,
-                            participants: 1, ticketCode: 1
-                        }
-                    }
-                ],
                 as: 'bookingItems'
             }
         }
