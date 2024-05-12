@@ -117,7 +117,7 @@ class BookingService {
         const booking = await aggregateItems(bookingId);
         if (!booking[0])
             throw new BadRequestError('Not found booking');
-        return { booking: booking[0] };
+        return booking[0];
     }
 
     static deleteBooking = async (bookingId) => {
