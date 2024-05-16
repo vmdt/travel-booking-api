@@ -5,12 +5,14 @@ const { getAll, updateOne, getOne } = require('../repositories/factory.repo');
 const { NotFoundError, BadRequestError } = require('../utils/error.response');
 const { isDataURL } = require('../utils');
 const { upload } = require('../helpers/cloudinary');
+const { getUserByUsernameOrEmail } = require('../repositories/user.repo');
 
 class UserService {
     static getAllUsers = async (query) => {
-        let users = await getAll(UserModel, query, true);
+        let {total, docs: users} = await getAll(UserModel, query, true);
         users = users.map(user => _.omit(user, ['password']));
         return {
+            total,
             result: users.length,
             users
         }
@@ -43,6 +45,20 @@ class UserService {
             _id: new Types.ObjectId(userId)
         }, true);
         return { user: _.omit(user, ['password']) }
+    }
+
+    static createUserByAdmin = async (payload) => {
+        const userExisting = await getUserByUsernameOrEmail(payload.username, payload.email);
+        if (userExisting)
+            throw new BadRequestError('Username or email already exists');
+        if (!payload.passwordConfirm) {
+            payload.passwordConfirm = payload.password;
+        }
+
+        payload.emailVerified = true;
+
+        const user = await UserModel.create(payload);
+        return { user: user.toObject() }
     }
 
 }

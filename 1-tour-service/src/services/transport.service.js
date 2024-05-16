@@ -28,8 +28,9 @@ class TransportService {
     }
 
     static getAllTransports = async (query) => {
-        const transports = await getAll(TransportModel, query);
+        const {total, docs: transports} = await getAll(TransportModel, query);
         return {
+            total,
             result: transports.length,
             transportations: transports
         }
@@ -60,12 +61,13 @@ class TransportService {
     }
 
     static searchTransport = async ({ keyword, query }) => {
-        const foundTransports = await getMany(TransportModel, {
+        const {total, docs: foundTransports} = await getMany(TransportModel, {
             name: { $regex: keyword, $options: 'i' },
             isActive: true
         }, query);
 
         return {
+            total,
             result: foundTransports.length,
             transportations: foundTransports
         }

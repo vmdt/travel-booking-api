@@ -1,6 +1,6 @@
 const { upload } = require("../helpers/cloudinary");
 const { getUserById } = require("../repositories/user.repo");
-const profileSchema = require("../schemes/user/profile");
+const { profileSchema, createUserSchema } = require("../schemes/user/profile");
 const UserService = require("../services/user.service");
 const { BadRequestError, NotFoundError } = require("../utils/error.response");
 const { SuccessResponse } = require("../utils/sucess.response")
@@ -28,6 +28,17 @@ class UserController {
         new SuccessResponse({
             message: 'Get user successfully',
             metadata: await UserService.getUser(req.params.userId)
+        }).send(res);
+    }
+
+    createUserByAdmin = async (req, res, next) => {
+        const { error } = await Promise.resolve(createUserSchema.validate(req.body));
+        if (error?.details)
+            throw new BadRequestError(error.details[0].message);
+
+        new SuccessResponse({
+            message: 'Create user successfully',
+            metadata: await UserService.createUserByAdmin(req.body)
         }).send(res);
     }
 }

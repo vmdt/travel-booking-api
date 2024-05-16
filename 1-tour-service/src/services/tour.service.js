@@ -103,10 +103,11 @@ class TourService {
     }
 
     static getAllTours = async (query) => {
-        const tours = await getAllTours(query, 'category', 'interest');
+        const { total, docs } = await getAllTours(query, 'category', 'interest');
         return {
-            result: tours.length,
-            tours
+            total,
+            result: docs.length,
+            tours: docs
         }
     }
 

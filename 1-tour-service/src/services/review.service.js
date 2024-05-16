@@ -42,9 +42,10 @@ class ReviewService {
             path: 'tour',
             select: 'code title thumbnail'
         }];
-        const reviews = await getAll(ReviewModel, query, true, popOptions);
+        const {total, docs: reviews} = await getAll(ReviewModel, query, true, popOptions);
 
         return {
+            total,
             result: reviews.length,
             reviews
         }
@@ -55,13 +56,14 @@ class ReviewService {
             path: 'user',
             select: 'fullname username email profilePicture'
         }];
-        const reviews = await getMany(ReviewModel, {
+        const {total, docs: reviews} = await getMany(ReviewModel, {
             tour: new Types.ObjectId(tourId),
             isHidden: false,
             approve: true
         }, query, true, popOptions);
 
         return {
+            total,
             result: reviews.length,
             reviews
         }

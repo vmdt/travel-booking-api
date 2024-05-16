@@ -41,30 +41,33 @@ class DiscountService {
     }
 
     static getAllDiscounts = async (query) => {
-        const discounts = await getAll(DiscountModel, query);
+        const {total, docs: discounts} = await getAll(DiscountModel, query);
         return {
+            total,
             result: discounts.length,
             discounts
         }
     }
 
     static getActiveDiscounts = async (query) => {
-        const discounts = await getMany(DiscountModel, {
+        const {total, docs: discounts} = await getMany(DiscountModel, {
             isActive: true
         }, query);
 
         return {
+            total,
             result: discounts.length,
             discounts
         }
     }
 
     static getInactiveDiscounts = async (query) => {
-        const discounts = await getMany(DiscountModel, {
+        const {total, docs: discounts} = await getMany(DiscountModel, {
             isActive: true
         }, query);
 
         return {
+            total,
             result: discounts.length,
             discounts
         }
@@ -128,11 +131,15 @@ class DiscountService {
         if (!discount.isActive)
             throw new BadRequestError('Discount has been deactivated');
 
-        const tours = await getMany(TourModel, {
+        const {total, docs: tours} = await getMany(TourModel, {
             _id: { $in: discount.tours }
         }, query, true);
 
-        return { tours };
+        return { 
+            total,
+            result: tours.length,
+            tours    
+        };
     }
 
     static getDiscountAmount = async ({ code, tours }) => {

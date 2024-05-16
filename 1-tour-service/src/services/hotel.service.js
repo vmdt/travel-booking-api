@@ -10,8 +10,9 @@ class HotelService {
     }
 
     static getAllHotels = async (query) => {
-        const hotels = await getAll(HotelModel, query);
+        const { total, docs: hotels } = await getAll(HotelModel, query);
         return {
+            total,
             result: hotels.length,
             hotels
         }
@@ -38,11 +39,12 @@ class HotelService {
     }
 
     static searchHotel = async ({ keyword, query }) => {
-        const foundHotels = await getMany(HotelModel, {
+        const {total, docs: foundHotels } = await getMany(HotelModel, {
             name: { $regex: keyword, $options: 'i' }
         }, query);
 
         return {
+            total,
             result: foundHotels.length,
             hotels: foundHotels
         }

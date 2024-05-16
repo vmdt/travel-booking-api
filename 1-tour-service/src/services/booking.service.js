@@ -92,8 +92,9 @@ class BookingService {
             path: 'user',
             select: 'username email',
         };
-        const bookings = await getAll(BookingModel, query, true, popOptions);
+        const { total, docs: bookings} = await getAll(BookingModel, query, true, popOptions);
         return {
+            total,
             result: bookings.length,
             bookings
         }
@@ -104,10 +105,11 @@ class BookingService {
             path: 'user',
             select: 'username email',
         };
-        const bookings = await getMany(BookingModel, {
+        const {total, docs: bookings } = await getMany(BookingModel, {
             user: new Types.ObjectId(userId)
         }, query, true, popOptions);
         return {
+            total,
             result: bookings.length,
             bookings
         }

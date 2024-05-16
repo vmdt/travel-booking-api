@@ -13,6 +13,7 @@ class APIFeatures {
         queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, match => `$${match}`);
 
         this.query.find(JSON.parse(queryStr));
+        this.totalQuery = this.query.clone();
         return this;
     }
 
@@ -46,6 +47,10 @@ class APIFeatures {
         this.query = this.query.skip(skip).limit(limit);
 
         return this;
+    }
+
+    async getTotalDocs() {
+        return await this.totalQuery.countDocuments();
     }
 }
 

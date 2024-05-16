@@ -19,8 +19,9 @@ class CategoryService {
     }
 
     static getAllCategories = async (query) => {
-        const categories = await getAll(CategoryModel, query);
+        const {total, docs: categories } = await getAll(CategoryModel, query);
         return {
+            total,
             result: categories.length,
             categories
         }

@@ -34,8 +34,9 @@ class LocationService {
     }
 
     static getAllLocations = async (query) => {
-        const locations = await getAll(LocationModel, query);
+        const {total, docs: locations} = await getAll(LocationModel, query);
         return {
+            total,
             result: locations.length,
             locations
         };

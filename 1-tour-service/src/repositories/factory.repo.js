@@ -30,8 +30,13 @@ const getAll = async (Model, queryObj, lean = true, popOptions = []) => {
         .sort()
         .limitFields()
         .paginate();
-        const docs = lean ? await features.query.lean() : await features.query;
-    return docs;
+
+    const totalDocs = await features.getTotalDocs();
+    const docs = lean ? await features.query.lean() : await features.query;
+    return {
+        total: totalDocs,
+        docs
+    };
 }
 
 const getMany = async (Model, filter, queryObj, lean = true, popOptions = []) => {
@@ -41,8 +46,12 @@ const getMany = async (Model, filter, queryObj, lean = true, popOptions = []) =>
         .limitFields()
         .paginate()
 
+    const totalDocs = await features.getTotalDocs();
     const docs = lean ? await features.query.lean() : await features.query;
-    return docs;
+    return {
+        total: totalDocs,
+        docs
+    };
 }
 
 const deleteOne = async (Model, id) => {
