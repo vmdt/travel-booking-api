@@ -9,14 +9,14 @@ class ReviewRoutes {
     }
 
     routes() {
-        this.router.get('/:tourId', asyncHandler(reviewController.getReviewsByUser));
+        this.router.get('/tour/:tourId', asyncHandler(reviewController.getReviewsByUser));
         this.router.use(protect);
         this.router.patch('/:reviewId', asyncHandler(reviewController.updateReview));
         this.router.post('/', asyncHandler(reviewController.createReview));
     
         
         this.router.use(restrictTo('admin'));
-        this.router.get('/approve/:reviewId', asyncHandler(reviewController.approveReview));
+        this.router.patch('/approve/:reviewId', asyncHandler(reviewController.approveReview));
         this.router.get('/details/:reviewId', asyncHandler(reviewController.getReview));
         this.router.delete('/:reviewId', asyncHandler(reviewController.deleteReview));
         this.router.get('/', asyncHandler(reviewController.getAllReviewsByAdmin));
