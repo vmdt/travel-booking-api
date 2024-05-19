@@ -16,7 +16,7 @@ class ReviewRoutes {
     
         
         this.router.use(restrictTo('admin'));
-        this.router.patch('/approve/:reviewId', asyncHandler(reviewController.approveReview));
+        this.router.get('/approve/:reviewId', asyncHandler(reviewController.approveReview));
         this.router.get('/details/:reviewId', asyncHandler(reviewController.getReview));
         this.router.delete('/:reviewId', asyncHandler(reviewController.deleteReview));
         this.router.get('/', asyncHandler(reviewController.getAllReviewsByAdmin));
