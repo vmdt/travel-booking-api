@@ -88,7 +88,7 @@ class ReviewService {
         // update rating for tour
         await updateOne(TourModel, { _id: review.tour }, {
             numOfRating: aggreateReview[0].numOfRating,
-            ratingAverage: aggreateReview[0].ratingAverage
+            ratingAverage: Math.floor(aggreateReview[0].ratingAverage*10)/10
         });
 
         review = await review.populate(popOptions);
