@@ -25,7 +25,7 @@ class Application {
         this.app.use(hpp());
         this.app.use(helmet());
         this.app.use(cors({
-            origin: config.CLIENT_URL,
+            origin: '*',
             credentials: true,
             methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
         }));

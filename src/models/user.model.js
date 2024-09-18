@@ -80,6 +80,8 @@ User.pre('save', function(next) {
 });
 
 User.methods.correctPassword = async function(candidate) {
+    if (!this.password)
+        return false;
     return await bcrypt.compare(candidate, this.password);
 }
 
