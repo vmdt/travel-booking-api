@@ -6,6 +6,7 @@ const generateOtp = async (email) => {
 		digits: true,
 		upperCaseAlphabets: false,
 		specialChars: false,
+		lowerCaseAlphabets: false,
 	});
 
 	let result = await OTPModel.findOne({ otp: otp });
@@ -14,6 +15,7 @@ const generateOtp = async (email) => {
 			digits: true,
 			upperCaseAlphabets: false,
 			specialChars: false,
+			lowerCaseAlphabets: false,
 		});
 		result = await OTPModel.findOne({ otp: otp });
 	}
