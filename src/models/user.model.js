@@ -61,6 +61,10 @@ const User = new mongoose.Schema(
 		dateOfExpirationPassport: String,
 		googleId: String,
 		typeAuth: String,
+		isVerifiedOTP: {
+			type: Boolean,
+			default: false,
+		},
 	},
 	{
 		timestamps: true,
