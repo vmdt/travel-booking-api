@@ -33,7 +33,7 @@ class OTPService {
 	};
 
 	static verifyOTP = async (email, otpCode) => {
-		const otp = await OTPModel.findOneAndDelete({ email, otp: otpCode });
+		const otp = await OTPModel.findOne({ email, otp: otpCode });
 		if (!otp) throw new BadRequestError("Invalid OTP code");
 
 		const user = await UserModel.findOneAndUpdate(

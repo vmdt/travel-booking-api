@@ -1,6 +1,10 @@
 const loginSchema = require("../schemes/auth/login");
 const signupSchema = require("../schemes/auth/signup");
-const { emailSchema, passwordSchema } = require("../schemes/auth/password");
+const {
+	emailSchema,
+	passwordSchema,
+	resetPasswordSchema,
+} = require("../schemes/auth/password");
 const AuthService = require("../services/auth.service");
 const {
 	BadRequestError,
@@ -143,6 +147,18 @@ class AuthController {
 		return new SuccessResponse({
 			message: "OTP code verified successfully",
 			metadata: await OTPService.verifyOTP(req.body.email, req.body.otp),
+		}).send(res);
+	};
+
+	resetPasswordMobile = async (req, res, next) => {
+		const { error } = await Promise.resolve(
+			resetPasswordSchema.validate(req.body),
+		);
+		if (error?.details) throw new BadRequestError(error.details[0].message);
+
+		return new SuccessResponse({
+			message: "Password reset successfully",
+			metadata: await AuthService.resetPasswordMobile(req.body),
 		}).send(res);
 	};
 }

@@ -33,6 +33,11 @@ class AuthRoutes {
 			"/reset-password/:token",
 			asyncHandler(authController.resetPassword),
 		);
+
+		this.router.put(
+			"/reset-password-mobile",
+			asyncHandler(authController.resetPasswordMobile),
+		);
 		this.router.post("/send-otp", asyncHandler(authController.sendOTP));
 		this.router.post("/verify-otp", asyncHandler(authController.verifyOTP));
 
