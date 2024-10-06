@@ -252,6 +252,29 @@ class TourService {
 			tours,
 		};
 	};
+
+	static getTopDiscountTours = async (query) => {
+		const { total, docs: tours } = await getMany(
+			TourModel,
+			{
+				$or: [
+					{ discountPrice: { $gt: 0 } },
+					{ discountPercentage: { $gt: 0 } },
+				],
+			},
+			{
+				...query,
+				limit: query.limit || 10,
+				sort: "-discountPrice -discountPercentage",
+			},
+		);
+
+		return {
+			total,
+			result: tours.length,
+			tours,
+		};
+	};
 }
 
 module.exports = TourService;

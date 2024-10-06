@@ -98,6 +98,13 @@ class TourController {
 			),
 		}).send(res);
 	};
+
+	getTopDiscountTours = async (req, res, next) => {
+		new SuccessResponse({
+			messgae: "Get top discount tours successfully",
+			metadata: await TourService.getTopDiscountTours(req.query),
+		}).send(res);
+	};
 }
 
 module.exports = new TourController();

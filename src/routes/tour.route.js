@@ -18,6 +18,11 @@ class TourRoutes {
 			asyncHandler(tourController.getDistances),
 		);
 
+		this.router.get(
+			"/top-discount-tours",
+			asyncHandler(tourController.getTopDiscountTours),
+		);
+
 		this.router.get("/all", asyncHandler(tourController.getAllTours));
 		this.router.get(
 			"/active-tours/all",
