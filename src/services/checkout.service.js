@@ -25,6 +25,9 @@ class CheckoutService {
 			{
 				path: "tours.transports",
 			},
+			{
+				path: "tours.hotels",
+			},
 		]);
 
 		let { tours } = cart;
