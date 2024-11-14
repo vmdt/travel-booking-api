@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Result</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="result" style="text-align: center;">
+            <% if (paymentStatus === 'success') { %>
+                <img src="https://res.cloudinary.com/dxrygyw5d/image/upload/v1731579397/samples/checked_ixcx1q.png" alt="Success" class="icon" style="width: 50px; height: 50px; margin: 10px;">
+                <p style="color: green; font-weight: bold;">Payment Success</p>
+            <% } else { %>
+                <img src="https://res.cloudinary.com/dxrygyw5d/image/upload/v1731579397/samples/failed_th27gc.png" alt="Failed" class="icon" style="width: 50px; height: 50px; margin: 10px;">
+                <p style="color: red; font-weight: bold;">Payment Failed</p>
+            <% } %>
+        </div>
+    </div>
+</body>
+</html>
