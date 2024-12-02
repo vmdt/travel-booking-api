@@ -1,16 +1,39 @@
+# Travel Booking API Server
+
+This repository contains the source code for the **Travel Booking API Server**, built with **Express.js**. The API server is designed to handle core functionalities for a travel booking system, including user authentication, tour management, booking handling, and notifications.
+
 API documentation: https://documenter.getpostman.com/view/28049062/2sA2xb6b7E
 
+## Features
+
+- **User Management**: Register, login, and manage user accounts.
+- **Tour Management**: CRUD operations for tours and destinations.
+- **Booking System**: Handle bookings with real-time availability updates.
+- **Notification Service**: Send notifications to users for booking updates.
+- **Message Queue**: Implements **RabbitMQ** for asynchronous task processing (e.g., sending notifications).
+- **Data Caching**: Utilizes **Redis** for improving performance.'
+- **Distributed Locking**: Using Optimistic Locking in **Redis**
+- **Secure API**: Token-based authentication using **JWT**.
+
+---
 
 ## Installation
 
-Install travel-booking-server with npm
+1. **Clone the repository**:
 
-```bash
-  npm install 
-  npm run dev
-```
+   ```bash
+   git clone https://github.com/vmdt/travel-booking-api.git
+   cd travel-booking-api
+   ```
 
-Create .env file in tour service
+2. **Install dependencies**:
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables**:
+   Create .env file in tour service
 
 ```bash
 NODE_ENV=development
@@ -29,16 +52,15 @@ VNPAY_SECRET=CYMFPTGAKOCZEXMQRZFCROWKDNNATOIB
 VNPAY_TMN_CODE=RUGRQ15G
 VNPAY_URL=https://sandbox.vnpayment.vn/paymentv2/vpcpay.html
 ```
-Create .env file in notification service
 
-```bash
-NODE_ENV=development
-PORT=4002
-CLIENT_URL=
-RABBITMQ_ENDPOINT=amqps://hxcogcza:cU1DuN2iHmYndFue4odwleYX4g9LRfz-@octopus.rmq3.cloudamqp.com/hxcogcza
-HOST_MAIL=sandbox.smtp.mailtrap.io
-PORT_MAIL=2525
-USER_MAIL=f2f0f936d591e5
-USER_MAIL_PASS=e5ade45981b676
-SENDER_MAIL=travel@gmail.com
-```
+4. **Start the server**:
+   ```bash
+   npm start
+   ```
+
+## Contact
+
+If you have any questions or issues, feel free to reach out to the project maintainer:
+
+- **Email**: vmdt03@gmail.com
+- **GitHub**: [vmdt](https://github.com/vmdt)
