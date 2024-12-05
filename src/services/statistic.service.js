@@ -36,6 +36,26 @@ class StatisticService {
 			return null;
 		}
 	};
+
+	static getTotalRevenue = async () => {
+		const revenue = await BookingModel.aggregate([
+			{
+				$match: {
+					status: "completed",
+				},
+			},
+			{
+				$group: {
+					_id: null,
+					total: { $sum: "$checkoutOrder.totalPrice" },
+				},
+			},
+		]);
+
+		return {
+			total: revenue.length ? revenue[0].total : 0,
+		};
+	};
 }
 
 module.exports = StatisticService;

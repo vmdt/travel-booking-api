@@ -11,7 +11,10 @@ class StatisticRoute {
 	routes() {
 		this.router.use([protect, restrictTo("admin")]);
 		this.router.get("/revenue", asyncHandler(statisticController.getRevenue));
-
+		this.router.get(
+			"/total-revenue",
+			asyncHandler(statisticController.getTotalRevenue),
+		);
 		return this.router;
 	}
 }
