@@ -13,7 +13,7 @@ const searchRoutes = require("./routes/search.route");
 const uploadRoutes = require("./routes/upload.route");
 const hotelRoutes = require("./routes/hotel.route");
 const reviewRoutes = require("./routes/review.route");
-const notificationRoutes = require("./routes/notification.route");
+// const notificationRoutes = require("./routes/notification.route");
 const statisticRoutes = require("./routes/statistic.route");
 
 const BASE_AUTH_URL = "/api/v1/auth";
@@ -31,7 +31,7 @@ const BASE_SEARCH_URL = "/api/v1/search";
 const BASE_UPLOAD_URL = "/api/v1/upload";
 const BASE_HOTEL_URL = "/api/v1/hotels";
 const BASE_REVIEW_URL = "/api/v1/reviews";
-const BASE_NOTIFICATION_URL = "/api/v1/notifications";
+// const BASE_NOTIFICATION_URL = "/api/v1/notifications";
 const BASE_STATISTIC_URL = "/api/v1/statistics";
 
 const appRoutes = (app) => {
@@ -50,7 +50,7 @@ const appRoutes = (app) => {
 	app.use(BASE_UPLOAD_URL, uploadRoutes.routes());
 	app.use(BASE_HOTEL_URL, hotelRoutes.routes());
 	app.use(BASE_REVIEW_URL, reviewRoutes.routes());
-	app.use(BASE_NOTIFICATION_URL, notificationRoutes.routes());
+	// app.use(BASE_NOTIFICATION_URL, notificationRoutes.routes());
 	app.use(BASE_STATISTIC_URL, statisticRoutes.routes());
 };
 
