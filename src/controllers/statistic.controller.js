@@ -39,6 +39,14 @@ class StatisticController {
 			metadata: await StatisticService.getTotalRevenue(),
 		}).send(res);
 	};
+
+	getTopBookedTours = async (req, res, next) => {
+		const { numOfTours } = req.query;
+		new SuccessResponse({
+			message: "Get top booked tours successfully",
+			metadata: await StatisticService.getTopBookedTours(numOfTours),
+		}).send(res);
+	};
 }
 
 module.exports = new StatisticController();

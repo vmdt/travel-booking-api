@@ -1,4 +1,6 @@
+const { Types } = require("mongoose");
 const BookingModel = require("../models/booking.model");
+const BookingItemsModel = require("../models/bookingItems.model");
 const { formatRevenue } = require("../utils");
 
 class StatisticService {
@@ -55,6 +57,52 @@ class StatisticService {
 		return {
 			total: revenue.length ? revenue[0].total : 0,
 		};
+	};
+
+	static getTopBookedTours = async (numOfTours) => {
+		const topBookedTours = await BookingItemsModel.aggregate([
+			{
+				$unwind: "$participants",
+			},
+			{
+				$group: {
+					_id: "$tour._id",
+					total: { $sum: "$participants.quantity" },
+				},
+			},
+			{
+				$sort: { total: -1 },
+			},
+			{
+				$limit: parseInt(numOfTours),
+			},
+			{
+				$lookup: {
+					from: "tours",
+					localField: "_id",
+					foreignField: "_id",
+					as: "tour",
+				},
+			},
+			{
+				$unwind: "$tour",
+			},
+			{
+				$project: {
+					"tour._id": 1,
+					"tour.title": 1,
+					"tour.code": 1,
+					"tour.thumbnail": 1,
+					"tour.numOfRating": 1,
+					"tour.ratingAverage": 1,
+					"tour.regularPrice": 1,
+					"tour.currency": 1,
+					total: 1,
+				},
+			},
+		]);
+
+		return topBookedTours;
 	};
 }
 

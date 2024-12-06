@@ -15,6 +15,11 @@ class StatisticRoute {
 			"/total-revenue",
 			asyncHandler(statisticController.getTotalRevenue),
 		);
+		this.router.get(
+			"/top-booked-tours",
+			asyncHandler(statisticController.getTopBookedTours),
+		);
+
 		return this.router;
 	}
 }
