@@ -52,6 +52,9 @@ const appRoutes = (app) => {
 	app.use(BASE_REVIEW_URL, reviewRoutes.routes());
 	// app.use(BASE_NOTIFICATION_URL, notificationRoutes.routes());
 	app.use(BASE_STATISTIC_URL, statisticRoutes.routes());
+	app.get("/", (req, res) => {
+		res.status(200).send("OK");
+	});
 };
 
 module.exports = appRoutes;
