@@ -22,7 +22,10 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           cd /travelife/travel-booking-api
-          git pull origin prod
-          docker-compose down
-          docker-compose up --build -d
+          docker build . -t travelife-be
+          docker stop travelife-be || true
+          docker rm travelife-be || true
+          docker run -d --name travelife-be -p 4001:4001 --env-file .env --network app_network travelife-be
+          docker system prune -f
+          docker exec travelife-be npm start
           EOF

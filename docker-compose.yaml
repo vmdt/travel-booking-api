@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   be:
+    container_name: travelife-be
     build:
       context: .
       dockerfile: Dockerfile
