@@ -27,4 +27,5 @@ jobs:
           docker rm travelife-be || true
           docker run -d --name travelife-be -p 4001:4001 --env-file .env --network app_network travelife-be
           docker system prune -f
+          docker exec travelife-be npm start
           EOF
