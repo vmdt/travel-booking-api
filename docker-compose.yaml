@@ -32,7 +32,7 @@ services:
       - ./certs:/etc/letsencrypt:ro
     ports:
       - "8080:80" # HTTP port
-      - "443:443" # HTTPS port
+      - "4343:443" # HTTPS port
     depends_on:
       - be
     networks:
