@@ -2,6 +2,7 @@ version: "3.8"
 
 services:
   be:
+    container_name: travelife-be
     build:
       context: .
       dockerfile: Dockerfile
@@ -22,6 +23,19 @@ services:
       - REDIS_PASSWORD=mysecretpassword
     volumes:
       - redis_data:/data
+    networks:
+      - app_network
+
+  nginx:
+    image: nginx:latest
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./certs:/etc/letsencrypt:ro
+    ports:
+      - "80:80" # HTTP port
+      - "443:443" # HTTPS port
+    depends_on:
+      - be
     networks:
       - app_network
 
