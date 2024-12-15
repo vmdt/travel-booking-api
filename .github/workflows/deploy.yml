@@ -1,5 +1,8 @@
 name: Deploy to ECS
 
+env:
+  CLIENT_URL: https://travelife-booking.vercel.app
+
 on:
   push:
     branches:
@@ -22,7 +25,9 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           cd /travelife/travel-booking-api
-          docker build . -t travelife-be
+          docker build . -t travelife-be \
+            --build-arg NODE_ENV=production \
+            --build-arg CLIENT_URL=${CLIENT_URL}
           docker stop travelife-be || true
           docker rm -f travelife-be || true
           docker run -d --name travelife-be -p 4001:4001 --env-file .env --network travel-booking-api_app_network travelife-be
