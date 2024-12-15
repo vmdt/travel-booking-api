@@ -6,6 +6,12 @@ API Endpoint: https://travelifeapis.site/
 
 API documentation: https://documenter.getpostman.com/view/28049062/2sA2xb6b7E
 
+## System Design
+
+<p align="center">
+  <img src="https://res.cloudinary.com/dzhl9oxog/image/upload/v1734245875/Picture1_lvpxdg.png" alt="System-Design"/>
+</p>
+
 ## Features
 
 - **User Management**: Register, login, and manage user accounts.
