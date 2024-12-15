@@ -1,7 +1,7 @@
 name: Deploy to ECS
 
-variables:
-  CLIENT_URL: https://travelife-booking.vercel.app/
+env:
+  CLIENT_URL: https://travelife-booking.vercel.app
 
 on:
   push:
