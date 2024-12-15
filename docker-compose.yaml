@@ -8,8 +8,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4001:4001"
-    env_file:
-      - .env
+    # env_file:
+    #   - .env
     depends_on:
       - redis
     networks:
