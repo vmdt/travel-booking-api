@@ -8,8 +8,8 @@ services:
       dockerfile: Dockerfile
     ports:
       - "4001:4001"
-    # env_file:
-    #   - .env
+    env_file:
+      - .env
     depends_on:
       - redis
     networks:
@@ -38,6 +38,12 @@ services:
       - be
     networks:
       - app_network
+
+  python-export:
+    container_name: python-export
+    build:
+      context: ./python-export
+      dockerfile: Dockerfile
 
 networks:
   app_network:
