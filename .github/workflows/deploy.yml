@@ -27,13 +27,29 @@ jobs:
         run: |
           ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           cd /travelife/travel-booking-api
+
           git pull origin prod
           git submodule update --init --recursive
-          docker build . -t travelife-be \
-            --build-arg NODE_ENV=production \
-            --build-arg CLIENT_URL=${CLIENT_URL}
-          docker stop travelife-be || true
-          docker rm -f travelife-be || true
-          docker run -d --name travelife-be -p 4001:4001 --env-file .env --network travel-booking-api_app_network travelife-be
-          docker system prune -f
+
+          if [[ "${{ github.event.head_commit.message }}" =~ ^deploy:python-export ]]; then
+            echo "Deploying python-export..."
+
+            cd python-export
+            docker build . -t python-export \
+              --build-arg NODE_ENV=production
+            docker stop python-export || true
+            docker rm -f python-export || true
+            docker run -d --name python-export -p 5000:5000 --env-file .env python-export
+            docker system prune -f
+          else
+            echo "Deploying travelife-be..."
+            
+            docker build . -t travelife-be \
+              --build-arg NODE_ENV=production \
+              --build-arg CLIENT_URL=${CLIENT_URL}
+            docker stop travelife-be || true
+            docker rm -f travelife-be || true
+            docker run -d --name travelife-be -p 4001:4001 --env-file .env --network travel-booking-api_app_network travelife-be
+            docker system prune -f
+          fi
           EOF
