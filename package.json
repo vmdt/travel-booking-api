@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "amqplib": "^0.10.3",
+    "axios": "^1.7.9",
     "bcrypt": "^5.1.1",
     "bullmq": "^5.3.3",
     "cloudinary": "^1.41.3",

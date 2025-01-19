@@ -15,6 +15,7 @@ const hotelRoutes = require("./routes/hotel.route");
 const reviewRoutes = require("./routes/review.route");
 // const notificationRoutes = require("./routes/notification.route");
 const statisticRoutes = require("./routes/statistic.route");
+const exportRoutes = require("./routes/export.route");
 
 const BASE_AUTH_URL = "/api/v1/auth";
 const BASE_USER_URL = "/api/v1/users";
@@ -33,6 +34,7 @@ const BASE_HOTEL_URL = "/api/v1/hotels";
 const BASE_REVIEW_URL = "/api/v1/reviews";
 // const BASE_NOTIFICATION_URL = "/api/v1/notifications";
 const BASE_STATISTIC_URL = "/api/v1/statistics";
+const BASE_EXPORT_URL = "/api/v1/export";
 
 const appRoutes = (app) => {
 	app.use(BASE_USER_URL, userRoutes.routes());
@@ -52,6 +54,7 @@ const appRoutes = (app) => {
 	app.use(BASE_REVIEW_URL, reviewRoutes.routes());
 	// app.use(BASE_NOTIFICATION_URL, notificationRoutes.routes());
 	app.use(BASE_STATISTIC_URL, statisticRoutes.routes());
+	app.use(BASE_EXPORT_URL, exportRoutes.routes());
 	app.get("/", (req, res) => {
 		res.status(200).send("Welcome to Travel API");
 	});
