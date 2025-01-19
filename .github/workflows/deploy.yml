@@ -23,7 +23,7 @@ jobs:
 
       - name: Deploy to ECS
         run: |
-          ssh -tt -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
+          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           cd /travelife/travel-booking-api
           git submodule update --init --recursive
           docker build . -t travelife-be \
