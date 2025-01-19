@@ -44,6 +44,12 @@ services:
     build:
       context: ./python-export
       dockerfile: Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "5000:5000"
+    networks:
+      - app_network
 
 networks:
   app_network:
