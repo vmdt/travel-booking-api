@@ -9,7 +9,7 @@ class ExportRoute {
 
 	routes() {
 		this.router.get(
-			"/itinerary",
+			"/itinerary/:tourId",
 			asyncHandler(exportController.exportItinerary),
 		);
 

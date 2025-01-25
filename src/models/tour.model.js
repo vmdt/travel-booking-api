@@ -44,6 +44,7 @@ const Tour = new mongoose.Schema({
 			description: String,
 			address: String,
 			duration: Number,
+			timeline: String,
 			location: {
 				type: {
 					type: String,
