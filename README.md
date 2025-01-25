@@ -2,7 +2,15 @@
 
 This repository contains the source code for the **Travel Booking API Server**, built with **Express.js**. The API server is designed to handle core functionalities for a travel booking system, including user authentication, tour management, booking handling, and notifications.
 
+API Endpoint: https://travelifeapis.site/
+
 API documentation: https://documenter.getpostman.com/view/28049062/2sA2xb6b7E
+
+## System Design
+
+<p align="center">
+  <img src="https://res.cloudinary.com/dzhl9oxog/image/upload/v1734245875/Picture1_lvpxdg.png" alt="System-Design"/>
+</p>
 
 ## Features
 
