@@ -30,6 +30,7 @@ COPY package*.json ./
 
 
 RUN npm install
+RUN npm install pm2 -g
 
 
 COPY . .
@@ -62,4 +63,4 @@ RUN sed -i 's#NODE_ENV=.*#NODE_ENV=${NODE_ENV}#g' .env && \
 EXPOSE 4001
 
 
-CMD ["npm", "start"]
+CMD ["pm2-runtime", "ecosystem.config.js"]
