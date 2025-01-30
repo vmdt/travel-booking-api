@@ -35,6 +35,7 @@ jobs:
             echo "Deploying python-export..."
 
             cd python-export
+            git pull origin main
             docker build . -t python-export \
               --build-arg NODE_ENV=production
             docker stop python-export || true
@@ -49,7 +50,7 @@ jobs:
               --build-arg CLIENT_URL=${CLIENT_URL}
             docker stop travelife-be || true
             docker rm -f travelife-be || true
-            docker run -d --name travelife-be -p 4001:4001 --env-file .env --network travel-booking-api_app_network travelife-be
+            docker run -d --name travelife-be -p 4001:4001 --env-file .env --network travel-booking-api_app_network --health-interval=30s --health-retries=3 --restart always travelife-be
             docker system prune -f
           fi
           EOF
