@@ -73,6 +73,12 @@ function formatRevenue(data, startDate, endDate, period = "month") {
 	return result;
 }
 
+function createEndDate(startDate, duration) {
+	const endDate = new Date(startDate);
+	endDate.setDate(endDate.getDate() + Math.ceil(duration));
+	return endDate;
+}
+
 module.exports = {
 	omit,
 	isEmail,
@@ -80,4 +86,5 @@ module.exports = {
 	filterOut,
 	sortObject,
 	formatRevenue,
+	createEndDate,
 };
