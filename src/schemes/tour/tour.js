@@ -61,7 +61,7 @@ const tourSchema = Joi.object().keys({
 	}),
 	discountPrice: Joi.number().greater(0).optional(),
 	discountPercentage: Joi.number().greater(0).optional(),
-	duration: Joi.number().greater(0).optional(),
+	duration: Joi.number().greater(0).required(),
 	numOfRating: Joi.number().greater(0).optional(),
 	ratingAverage: Joi.number().greater(0).optional(),
 	currency: Joi.string().optional(),
