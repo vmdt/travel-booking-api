@@ -10,6 +10,7 @@ const {
 const OrderWorker = require("./queues/order.worker");
 const { consumeAuthEmailMessage } = require("./queues/email.consumer");
 const Queues = require("./queues/queues");
+const { createReviewCronJob } = require("./queues/order.producer");
 
 const SERVER_PORT = config.PORT || 4001;
 
@@ -31,10 +32,16 @@ class TravelServer {
 		new OrderWorker(this.ioredis); // run job worker instance
 		this.channel = await createConnection();
 		await consumeAuthEmailMessage(this.channel);
+
+		await this.runCronJob();
 	}
 
 	async startRedis() {
 		this.client = await redisConnect();
+	}
+
+	async runCronJob() {
+		await createReviewCronJob();
 	}
 
 	startMongodb() {
