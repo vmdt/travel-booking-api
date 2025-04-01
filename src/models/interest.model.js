@@ -5,6 +5,6 @@ const Interest = new mongoose.Schema({
     isActive: { type: Boolean, default: true },
     image: { type: String, required: true },
     icon: { type: String }
-});
+}, { timestamps: true });
 
 module.exports = mongoose.model('Interest', Interest);

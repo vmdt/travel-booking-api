@@ -93,6 +93,8 @@ const Tour = new mongoose.Schema({
 			currency: { type: String, default: "VND" },
 		},
 	],
+}, {
+	timestamps: true,
 });
 
 Tour.index({ startLocation: "2dsphere" });

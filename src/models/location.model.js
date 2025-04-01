@@ -12,7 +12,7 @@ const Location = new mongoose.Schema({
         coordinates: [Number]
     },
     thumbnail: String
-});
+}, { timestamps: true });
 
 Location.index({ name: 'text' });
 

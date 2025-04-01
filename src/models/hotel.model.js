@@ -14,7 +14,7 @@ const Hotel = new mongoose.Schema({
         value: Number,
         currency: { type: String, default: 'VND' }
     }]
-});
+}, { timestamps: true });
 
 Hotel.index({ name: 'text' });
 

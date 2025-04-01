@@ -10,7 +10,8 @@ const TourAvailabilities = new mongoose.Schema({
     startTime: String,
     vacancies: { type: Number, default: 20 }
 }, {
-    collection: 'tour_availabilities'
+    collection: 'tour_availabilities',
+    timestamps: true
 });
 
 module.exports = mongoose.model('TourAvailabilities', TourAvailabilities);

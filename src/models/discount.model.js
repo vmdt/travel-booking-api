@@ -21,7 +21,7 @@ const Discount = new mongoose.Schema({
 		required: true,
 	},
 	tours: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tour" }],
-});
+}, { timestamps: true });
 
 Discount.index({ code: "text" });
 

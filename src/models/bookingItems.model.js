@@ -26,7 +26,8 @@ const BookingItems = new mongoose.Schema({
         type: mongoose.Schema.Types.Mixed
     }]
 }, {
-    collection: 'booking_items'
+    collection: 'booking_items',
+    timestamps: true
 });
 
 module.exports = mongoose.model('BookingItems', BookingItems);
