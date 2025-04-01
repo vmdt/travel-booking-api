@@ -14,16 +14,13 @@ const consumeAuthEmailMessage = async (channel) => {
 		await channel.bindQueue(authQueue.queue, EXCHANGE_AUTH, ROUTING_KEY_AUTH);
 
 		channel.consume(authQueue.queue, async (msg) => {
-			const { receiver, verifyLink, template, username, resetLink, otpCode } =
-				JSON.parse(msg.content.toString());
+			const parsedData = JSON.parse(msg.content.toString());
+			const { receiver, template } = parsedData;
 			const locals = {
 				appLink: `${config.CLIENT_URL}`,
 				appIcon:
 					"https://res.cloudinary.com/dxrygyw5d/image/upload/v1709968499/travelife-logo_uf55mo.png",
-				username,
-				verifyLink,
-				resetLink,
-				otpCode,
+				...parsedData,
 			};
 
 			await sendMail(template, receiver, locals);

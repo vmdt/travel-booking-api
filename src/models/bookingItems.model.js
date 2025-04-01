@@ -24,7 +24,8 @@ const BookingItems = new mongoose.Schema({
     }],
     hotels: [{
         type: mongoose.Schema.Types.Mixed
-    }]
+    }],
+    isShowReview: { type: Boolean, default: false },
 }, {
     collection: 'booking_items',
     timestamps: true
