@@ -2,6 +2,12 @@ const { Worker } = require("bullmq");
 
 const BookingItemsModel = require("../models/bookingItems.model");
 const BookingModel = require("../models/booking.model");
+const { publishDirectMessage } = require("../queues/auth.producer");
+const config = require("../config");
+const { sendMail } = require("../helpers/email");
+
+const EXCHANGE_AUTH = "travel-auth";
+const ROUTING_AUTH = "auth";
 
 class CronWorker {
 	constructor(connection) {
@@ -34,13 +40,11 @@ class CronWorker {
 				populate: {
 					path: "user",
 				},
-			})
-			.lean();
-
-		const channel = await require("../server").channel;
+			});
 
 		bookingItems.forEach(async (item) => {
 			const booking = item.booking;
+			const tour = item.tour;
 			const user = booking.user;
 
 			item.isShowReview = true;
@@ -48,18 +52,23 @@ class CronWorker {
 
 			// Send email to user: todo
 			const messageDetails = {
-				reviewLink: "", // todo
+				appLink: `${config.CLIENT_URL}`,
+				appIcon:
+					"https://res.cloudinary.com/dxrygyw5d/image/upload/v1709968499/travelife-logo_uf55mo.png",
+				reviewLink: `${config.CLIENT_URL}/booking/${booking._id}`, // todo
 				username: user.username,
 				receiver: user.email,
-				template: "review",
+				template: "ratingOrder",
+				tourName: tour.title || '',
+				startDate: item.startDate,
+				endDate: item.endDate,
 			}
 
-			await publishDirectMessage(
-				channel,
-				EXCHANGE_EMAIL,
-				ROUTING_EMAIL,
-				JSON.stringify(messageDetails),
-			);
+			await sendMail(
+				"ratingOrder",
+				user.email,
+				messageDetails,
+			)
 		});
 	};
 }
