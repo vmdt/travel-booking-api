@@ -9,7 +9,7 @@ const createReviewCronJob = async () => {
 		queues.emailQueue,
 		"sendReviewEmail",
 		{},
-		"29 16 * * *",
+		"0 7 * * *",
 		{
 			timezone: "Asia/Ho_Chi_Minh",
 		},
