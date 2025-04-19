@@ -93,6 +93,23 @@ const Tour = new mongoose.Schema({
 			currency: { type: String, default: "VND" },
 		},
 	],
+	virtualTours: [
+		{
+			id: String,
+			name: String,
+			images: [String],
+			processedImage: String,
+			hotspots: [
+				{
+					id: String,
+					pitch: { type: Number, required: true },
+					yaw: { type: Number, required: true },
+					name: String,
+					action: String,
+				}
+			]
+		}
+	]
 }, {
 	timestamps: true,
 });

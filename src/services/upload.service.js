@@ -57,7 +57,7 @@ class UploadService {
         return { profilePictureURL: uploadResult.secure_url }
     }
 
-    static uploadImage = async (file, folder) => {
+    static uploadImage = async (file, folder, public_id) => {
         let dataURI;
         if (file && file.buffer) {
             const b64 = Buffer.from(file.buffer).toString('base64');
@@ -70,6 +70,7 @@ class UploadService {
             folder: `travelife/${folder}`,
             overwrite: true,
             invalidate: true,
+            ...(public_id && { public_id })
         });
 
         return {
