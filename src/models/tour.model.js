@@ -64,12 +64,10 @@ const Tour = new mongoose.Schema({
 	numOfRating: { type: Number, default: 0 },
 	ratingAverage: Number,
 	isActive: { type: Boolean, default: true },
-	locations: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Location",
-		},
-	],
+	location: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Location",
+	},
 	transports: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
