@@ -32,10 +32,11 @@ class UploadController {
 
     uploadImage = async (req, res, next) => {
         const { file } = req;
+        const { publicId } = req.query;
 
         new SuccessResponse({
             message: 'Upload image successfully',
-            metadata: await UploadService.uploadImage(file, req.params.folder)
+            metadata: await UploadService.uploadImage(file, req.params.folder, publicId)
         }).send(res);
     }
 }

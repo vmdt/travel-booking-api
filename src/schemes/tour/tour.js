@@ -75,7 +75,7 @@ const tourSchema = Joi.object().keys({
 			}),
 		)
 		.optional(),
-	locations: Joi.array().items(Joi.string()).optional(),
+	location: Joi.string().optional(),
 	transports: Joi.array().items(Joi.string()).optional(),
 	hotels: Joi.array().items(Joi.string()).optional(),
 });
@@ -90,6 +90,7 @@ const updateTourSchema = Joi.object().keys({
 	images: Joi.array().items(Joi.string()).optional(),
 	category: Joi.string().optional(),
 	interest: Joi.string().optional(),
+	type: Joi.string().optional(),
 	startLocation: Joi.object({
 		type: Joi.string().optional(),
 		coordinates: Joi.array().items(Joi.number()).optional(),
@@ -135,9 +136,28 @@ const updateTourSchema = Joi.object().keys({
 			}),
 		)
 		.optional(),
-	locations: Joi.array().items(Joi.string()).optional(),
+	location: Joi.string().optional(),
 	transports: Joi.array().items(Joi.string()).optional(),
 	hotels: Joi.array().items(Joi.string()).optional(),
+	virtualTours: Joi.array().items(
+		Joi.object({
+			_id: Joi.string().allow(null),
+			id: Joi.string().allow(null),
+			name: Joi.string().allow(null).optional(),
+			images: Joi.array().items(Joi.string()),
+			hotspots: Joi.array().items(
+				Joi.object({
+					_id: Joi.string().allow(null),
+					id: Joi.string(),
+					pitch: Joi.number().optional().allow(null),
+					yaw: Joi.number().optional().allow(null),
+					name: Joi.string().optional().allow(null).allow(""),
+					action: Joi.string().optional().allow(null).allow(""),
+				})
+			).optional().allow(null),
+			processedImage: Joi.string().optional().allow(null),
+		}).optional().allow(null),
+	).optional()
 });
 
 module.exports = {
