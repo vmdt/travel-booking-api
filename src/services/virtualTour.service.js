@@ -3,6 +3,7 @@ const UploadService = require("./upload.service");
 const { default: axios } = require("axios");
 const config = require("../config");
 const { BadRequestError } = require("../utils/error.response");
+const TourModel = require("../models/tour.model");
 
 
 class VirtualTourService {
@@ -47,6 +48,18 @@ class VirtualTourService {
             'images': images,
             'processedImage': response.data.url,
         };
+    }
+
+    static getVirtualTourPage = async (tourId, pageIndex) => {
+        const virtualTour = await TourModel.findOne(
+            { _id: tourId, "virtualTours.id": pageIndex.toString() },
+            { "virtualTours.$": 1 },
+        ).lean();
+
+        if (!virtualTour) {
+            throw new BadRequestError('Virtual tour not found');
+        }
+        return virtualTour.virtualTours[0];
     }
 }
 

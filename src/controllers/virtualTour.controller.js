@@ -13,6 +13,15 @@ class VirtualTourController {
             metadata: await VirtualTourService.processVirtualImage(tourId, page, images, files.files)
         }).send(res);
     }
+
+    getVirtualTourPage = async (req, res, next) => {
+        const { tourId, page } = req.params;
+
+        new SuccessResponse({
+            message: 'Get virtual tour page successfully',
+            metadata: await VirtualTourService.getVirtualTourPage(tourId, page)
+        }).send(res);
+    }
 }
 
 module.exports = new VirtualTourController();

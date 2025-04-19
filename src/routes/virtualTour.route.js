@@ -16,6 +16,10 @@ class VirtualTourRoutes {
             asyncHandler(virtualTourController.processVirtualTour)
         );
 
+        this.router.get('/:tourId/:page',
+            asyncHandler(virtualTourController.getVirtualTourPage)
+        );
+
         return this.router;
     }
 }
