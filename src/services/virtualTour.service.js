@@ -43,7 +43,10 @@ class VirtualTourService {
             throw new BadRequestError('Data does not satisfy for stitching images');
         }
 
-        return response.data;
+        return {
+            'images': images,
+            'processedImage': response.data.url,
+        };
     }
 }
 
