@@ -12,9 +12,10 @@ const tourSchema = Joi.object().keys({
 		"string.min": "Invalid title",
 		"string.empty": "Tour Title is a required field",
 	}),
+	type: Joi.string().optional(),
 	summary: Joi.string().optional(),
 	highlights: Joi.array().items(Joi.string()).optional(),
-	thumbnail: Joi.string().optional(),
+	thumbnail: Joi.string().required(),
 	description: Joi.string().optional(),
 	images: Joi.array().items(Joi.string()).optional(),
 	category: Joi.string().messages({
@@ -78,6 +79,25 @@ const tourSchema = Joi.object().keys({
 	location: Joi.string().optional(),
 	transports: Joi.array().items(Joi.string()).optional(),
 	hotels: Joi.array().items(Joi.string()).optional(),
+	virtualTours: Joi.array().items(
+		Joi.object({
+			_id: Joi.string().allow(null),
+			id: Joi.string().allow(null),
+			name: Joi.string().allow(null).optional(),
+			images: Joi.array().items(Joi.string()),
+			hotspots: Joi.array().items(
+				Joi.object({
+					_id: Joi.string().allow(null),
+					id: Joi.string(),
+					pitch: Joi.number().optional().allow(null),
+					yaw: Joi.number().optional().allow(null),
+					name: Joi.string().optional().allow(null).allow(""),
+					action: Joi.string().optional().allow(null).allow(""),
+				})
+			).optional().allow(null),
+			processedImage: Joi.string().optional().allow(null),
+		}).optional().allow(null),
+	).optional()
 });
 
 const updateTourSchema = Joi.object().keys({
