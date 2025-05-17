@@ -47,11 +47,12 @@ const tourSchema = Joi.object().keys({
 				description: Joi.string(),
 				address: Joi.string(),
 				duration: Joi.number().greater(0),
+				timeline: Joi.string().optional().allow(""),
 				location: Joi.object({
 					type: Joi.string().optional(),
 					coordinates: Joi.array().items(Joi.number()).optional(),
 				}).optional(),
-				icon: Joi.string(),
+				image: Joi.string().optional().allow(""),
 			}),
 		)
 		.optional(),
@@ -134,8 +135,12 @@ const updateTourSchema = Joi.object().keys({
 				description: Joi.string(),
 				address: Joi.string(),
 				duration: Joi.number().greater(0),
-				coordinates: Joi.array().items(Joi.number()),
-				icon: Joi.string(),
+				timeline: Joi.string().optional().allow(""),
+				location: Joi.object({
+					type: Joi.string().optional(),
+					coordinates: Joi.array().items(Joi.number()).optional(),
+				}).optional(),
+				image: Joi.string().optional().allow(""),
 			}),
 		)
 		.optional(),

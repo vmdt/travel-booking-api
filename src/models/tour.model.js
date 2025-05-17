@@ -53,7 +53,7 @@ const Tour = new mongoose.Schema({
 				},
 				coordinates: [Number],
 			},
-			icon: String,
+			image: String,
 		},
 	],
 	regularPrice: { type: Number, required: true },
