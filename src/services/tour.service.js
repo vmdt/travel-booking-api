@@ -85,7 +85,7 @@ class TourService {
 	};
 
 	static createTour = async (payload) => {
-		const { thumbnail, images, code, virtualTours } = payload;
+		const { thumbnail, images, code, virtualTours, itinerary } = payload;
 		if (isDataURL(thumbnail)) {
 			const thumbResult = await upload(thumbnail, {
 				folder: "travelife/tour",
@@ -125,6 +125,24 @@ class TourService {
 					tour.images = uploadedImages;
 					}
 				})
+			);
+		}
+
+		if (itinerary) {
+			await Promise.all(
+				itinerary.map(async (item, i) => {
+					if (item.image && isDataURL(item.image)) {
+						const imgResult = await upload(item.image, {
+							folder: `travelife/tour/${code}/itinerary`,
+							overwrite: true,
+							invalidate: true,
+							public_id: `${i}-${Date.now().toString()}`,
+						});
+						if (!imgResult?.public_id)
+							throw new BadRequestError("File upload error");
+						item.image = imgResult?.secure_url;
+					}
+				}),
 			);
 		}
 
@@ -225,7 +243,7 @@ class TourService {
 		if (!tourExisting) throw new NotFoundError("Not found tour");
 		if (!tourExisting.isActive)
 			throw new BadRequestError("Tour has been deactivated");
-		const { thumbnail, images, virtualTours } = payload;
+		const { thumbnail, images, virtualTours, itinerary } = payload;
 		if (thumbnail) {
 			if (isDataURL(thumbnail)) {
 				const thumbResult = await upload(thumbnail, {
@@ -285,6 +303,24 @@ class TourService {
 					tour.images = uploadedImages;
 					}
 				})
+			);
+		}
+
+		if (itinerary) {
+			await Promise.all(
+				itinerary.map(async (item, i) => {
+					if (item.image && isDataURL(item.image)) {
+						const imgResult = await upload(item.image, {
+							folder: `travelife/tour/${code}/itinerary`,
+							overwrite: true,
+							invalidate: true,
+							public_id: `${i}-${Date.now().toString()}`,
+						});
+						if (!imgResult?.public_id)
+							throw new BadRequestError("File upload error");
+						item.image = imgResult?.secure_url;
+					}
+				}),
 			);
 		}
 
