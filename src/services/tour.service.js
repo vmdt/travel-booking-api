@@ -85,7 +85,7 @@ class TourService {
 	};
 
 	static createTour = async (payload) => {
-		const { thumbnail, images, code } = payload;
+		const { thumbnail, images, code, virtualTours } = payload;
 		if (isDataURL(thumbnail)) {
 			const thumbResult = await upload(thumbnail, {
 				folder: "travelife/tour",
@@ -96,6 +96,36 @@ class TourService {
 			if (!thumbResult?.public_id)
 				throw new BadRequestError("File upload error");
 			payload.thumbnail = thumbResult?.secure_url;
+		}
+
+		if (virtualTours) {
+			await Promise.all(
+				virtualTours.map(async (tour, i) => {
+					if (Array.isArray(tour.images)) {
+					const uploadedImages = await Promise.all(
+						tour.images.map(async (img, j) => {
+							if (isDataURL(img)) {
+								const imgResult = await upload(img, {
+									folder: `travelife/tour/${tourExisting.code}/virtual/${tour.id}`,
+									overwrite: true,
+									invalidate: true,
+									public_id: `${j}-${Date.now().toString()}`,
+								});
+				
+								if (!imgResult?.public_id) {
+									throw new BadRequestError("File upload error");
+								}
+				
+								return imgResult.secure_url;
+							}
+				
+							return img;
+						})
+					);
+					tour.images = uploadedImages;
+					}
+				})
+			);
 		}
 
 		payload.images = await Promise.all(
