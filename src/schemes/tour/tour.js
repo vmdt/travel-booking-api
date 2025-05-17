@@ -43,6 +43,7 @@ const tourSchema = Joi.object().keys({
 	itinerary: Joi.array()
 		.items(
 			Joi.object({
+				_id: Joi.string().allow(null),
 				activity: Joi.string(),
 				description: Joi.string(),
 				address: Joi.string(),
@@ -131,6 +132,7 @@ const updateTourSchema = Joi.object().keys({
 	itinerary: Joi.array()
 		.items(
 			Joi.object({
+				_id: Joi.string().allow(null),
 				activity: Joi.string(),
 				description: Joi.string(),
 				address: Joi.string(),

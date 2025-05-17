@@ -311,7 +311,7 @@ class TourService {
 				itinerary.map(async (item, i) => {
 					if (item.image && isDataURL(item.image)) {
 						const imgResult = await upload(item.image, {
-							folder: `travelife/tour/${code}/itinerary`,
+							folder: `travelife/tour/${tourExisting.code}/itinerary`,
 							overwrite: true,
 							invalidate: true,
 							public_id: `${i}-${Date.now().toString()}`,
