@@ -8,6 +8,8 @@ const TourModel = require("../models/tour.model");
 
 class VirtualTourService {
     static processVirtualImage = async (tourCode, pageIndex, images = [], files = []) => {
+        tourCode = !tourCode ? 'temp' : tourCode;
+        pageIndex = !pageIndex ? 'temp' : pageIndex;
         if (files.length > 0) {
             let uploadedImages = [];
             try {
