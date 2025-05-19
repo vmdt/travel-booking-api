@@ -6,7 +6,7 @@ const Transportation = new mongoose.Schema({
     capacity: { type: Number, required: true },
     brand: String,
     isActive: Boolean,
-});
+}, { timestamps: true });
 
 Transportation.index({ name: 'text' });
 

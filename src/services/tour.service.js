@@ -24,7 +24,7 @@ class TourService {
 				_id: new Types.ObjectId(tourId),
 			},
 			true,
-			"category locations transports hotels",
+			"category location transports hotels",
 		);
 		return tour;
 	};
@@ -85,7 +85,7 @@ class TourService {
 	};
 
 	static createTour = async (payload) => {
-		const { thumbnail, images, code } = payload;
+		const { thumbnail, images, code, virtualTours, itinerary } = payload;
 		if (isDataURL(thumbnail)) {
 			const thumbResult = await upload(thumbnail, {
 				folder: "travelife/tour",
@@ -96,6 +96,54 @@ class TourService {
 			if (!thumbResult?.public_id)
 				throw new BadRequestError("File upload error");
 			payload.thumbnail = thumbResult?.secure_url;
+		}
+
+		if (virtualTours) {
+			await Promise.all(
+				virtualTours.map(async (tour, i) => {
+					if (Array.isArray(tour.images)) {
+					const uploadedImages = await Promise.all(
+						tour.images.map(async (img, j) => {
+							if (isDataURL(img)) {
+								const imgResult = await upload(img, {
+									folder: `travelife/tour/${tourExisting.code}/virtual/${tour.id}`,
+									overwrite: true,
+									invalidate: true,
+									public_id: `${j}-${Date.now().toString()}`,
+								});
+				
+								if (!imgResult?.public_id) {
+									throw new BadRequestError("File upload error");
+								}
+				
+								return imgResult.secure_url;
+							}
+				
+							return img;
+						})
+					);
+					tour.images = uploadedImages;
+					}
+				})
+			);
+		}
+
+		if (itinerary) {
+			await Promise.all(
+				itinerary.map(async (item, i) => {
+					if (item.image && isDataURL(item.image)) {
+						const imgResult = await upload(item.image, {
+							folder: `travelife/tour/${code}/itinerary`,
+							overwrite: true,
+							invalidate: true,
+							public_id: `${i}-${Date.now().toString()}`,
+						});
+						if (!imgResult?.public_id)
+							throw new BadRequestError("File upload error");
+						item.image = imgResult?.secure_url;
+					}
+				}),
+			);
 		}
 
 		payload.images = await Promise.all(
@@ -195,7 +243,7 @@ class TourService {
 		if (!tourExisting) throw new NotFoundError("Not found tour");
 		if (!tourExisting.isActive)
 			throw new BadRequestError("Tour has been deactivated");
-		const { thumbnail, images } = payload;
+		const { thumbnail, images, virtualTours, itinerary } = payload;
 		if (thumbnail) {
 			if (isDataURL(thumbnail)) {
 				const thumbResult = await upload(thumbnail, {
@@ -227,6 +275,55 @@ class TourService {
 				}),
 			);
 		}
+
+		if (virtualTours) {
+			await Promise.all(
+				virtualTours.map(async (tour, i) => {
+					if (Array.isArray(tour.images)) {
+					const uploadedImages = await Promise.all(
+						tour.images.map(async (img, j) => {
+							if (isDataURL(img)) {
+							const imgResult = await upload(img, {
+								folder: `travelife/tour/${tourExisting.code}/virtual/${tour.id}`,
+								overwrite: true,
+								invalidate: true,
+								public_id: `${j}-${Date.now().toString()}`,
+							});
+				
+							if (!imgResult?.public_id) {
+								throw new BadRequestError("File upload error");
+							}
+				
+							return imgResult.secure_url;
+							}
+				
+							return img;
+						})
+					);
+					tour.images = uploadedImages;
+					}
+				})
+			);
+		}
+
+		if (itinerary) {
+			await Promise.all(
+				itinerary.map(async (item, i) => {
+					if (item.image && isDataURL(item.image)) {
+						const imgResult = await upload(item.image, {
+							folder: `travelife/tour/${tourExisting.code}/itinerary`,
+							overwrite: true,
+							invalidate: true,
+							public_id: `${i}-${Date.now().toString()}`,
+						});
+						if (!imgResult?.public_id)
+							throw new BadRequestError("File upload error");
+						item.image = imgResult?.secure_url;
+					}
+				}),
+			);
+		}
+
 		const tour = await updateTourById(tourId, payload);
 
 		return {

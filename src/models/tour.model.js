@@ -44,6 +44,7 @@ const Tour = new mongoose.Schema({
 			description: String,
 			address: String,
 			duration: Number,
+			timeline: String,
 			location: {
 				type: {
 					type: String,
@@ -52,7 +53,7 @@ const Tour = new mongoose.Schema({
 				},
 				coordinates: [Number],
 			},
-			icon: String,
+			image: String,
 		},
 	],
 	regularPrice: { type: Number, required: true },
@@ -63,12 +64,10 @@ const Tour = new mongoose.Schema({
 	numOfRating: { type: Number, default: 0 },
 	ratingAverage: Number,
 	isActive: { type: Boolean, default: true },
-	locations: [
-		{
-			type: mongoose.Schema.Types.ObjectId,
-			ref: "Location",
-		},
-	],
+	location: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: "Location",
+	},
 	transports: [
 		{
 			type: mongoose.Schema.Types.ObjectId,
@@ -92,6 +91,25 @@ const Tour = new mongoose.Schema({
 			currency: { type: String, default: "VND" },
 		},
 	],
+	virtualTours: [
+		{
+			id: String,
+			name: String,
+			images: [String],
+			processedImage: String,
+			hotspots: [
+				{
+					id: String,
+					pitch: { type: Number, required: true },
+					yaw: { type: Number, required: true },
+					name: String,
+					action: String,
+				}
+			]
+		}
+	]
+}, {
+	timestamps: true,
 });
 
 Tour.index({ startLocation: "2dsphere" });

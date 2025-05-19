@@ -24,9 +24,11 @@ const BookingItems = new mongoose.Schema({
     }],
     hotels: [{
         type: mongoose.Schema.Types.Mixed
-    }]
+    }],
+    isShowReview: { type: Boolean, default: false },
 }, {
-    collection: 'booking_items'
+    collection: 'booking_items',
+    timestamps: true
 });
 
 module.exports = mongoose.model('BookingItems', BookingItems);

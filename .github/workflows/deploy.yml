@@ -1,4 +1,6 @@
-name: Deploy to ECS
+name: Deploy to AWS EC2
+description: Trigger deployment to AWS EC2 instance on push to prod branch
+# This workflow deploys the application to an AWS EC2 instance when changes are pushed to the prod branch.
 
 env:
   CLIENT_URL: https://travelife-booking.vercel.app
@@ -15,21 +17,66 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.5.3
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          ref: "prod"
+          submodules: recursive
 
-      - name: Deploy to ECS
+      - name: Dockerhub credentials
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Push be image
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          cd /travelife/travel-booking-api
           docker build . -t travelife-be \
             --build-arg NODE_ENV=production \
             --build-arg CLIENT_URL=${CLIENT_URL}
+          docker tag travelife-be ${{ secrets.DOCKER_USERNAME }}/travelife-be:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/travelife-be:latest
+
+      - name: Push python-export image
+        run: |
+          docker build ./python-export -t python-export
+          docker tag python-export ${{ secrets.DOCKER_USERNAME }}/python-export:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/python-export:latest
+
+      - name: Deploy to EC2
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          ENV_VARS: ${{ secrets.ENV_VARS }}
+          ENV_PYTHON_EXPORT: ${{ secrets.ENV_PYTHON_EXPORT }}
+          CLIENT_URL: ${{ env.CLIENT_URL }}
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+          ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST << EOF
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+          docker network inspect travelife-network >/dev/null 2>&1 || docker network create travelife-network
+
+          # Pull images
+          docker pull $DOCKER_USERNAME/travelife-be:latest
+          docker pull $DOCKER_USERNAME/python-export:latest
+
           docker stop travelife-be || true
-          docker rm -f travelife-be || true
-          docker run -d --name travelife-be -p 4001:4001 --env-file .env --network travel-booking-api_app_network travelife-be
+          docker rm travelife-be || true
+          docker stop python-export || true
+          docker rm python-export || true
+
+          cat > /tmp/travelife.env << EOL
+          $ENV_VARS
+          EOL
+
+          cat > /tmp/python-export.env << EOL
+          $ENV_PYTHON_EXPORT
+          EOL
+
+          docker run -d --name travelife-be --network travelife-network --env-file /tmp/travelife.env -e CLIENT_URL=$CLIENT_URL -p 4001:4001 $DOCKER_USERNAME/travelife-be:latest
+          docker run -d --name python-export --network travelife-network --env-file /tmp/python-export.env -p 5000:5000 $DOCKER_USERNAME/python-export:latest
+
           docker system prune -f
           EOF
