@@ -18,39 +18,56 @@ jobs:
         with:
           ref: "prod"
 
-      - name: Setup SSH
-        uses: webfactory/ssh-agent@v0.5.3
+      - name: Dockerhub credentials
+        uses: docker/login-action@v2
         with:
-          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Deploy to ECS
+      - name: Push be image
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
-          cd /travelife/travel-booking-api
+          docker build . -t travelife-be \
+            --build-arg NODE_ENV=production \
+            --build-arg CLIENT_URL=${CLIENT_URL}
+          docker tag travelife-be ${{ secrets.DOCKER_USERNAME }}/travelife-be:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/travelife-be:latest
 
-          git pull origin prod
-          git submodule update --init --recursive
+      - name: Push python-export image
+        run: |
+          docker build ./python-export -t python-export
+          docker tag python-export ${{ secrets.DOCKER_USERNAME }}/python-export:latest
+          docker push ${{ secrets.DOCKER_USERNAME }}/python-export:latest
 
-          if [[ "${{ github.event.head_commit.message }}" =~ ^deploy:python-export ]]; then
-            echo "Deploying python-export..."
+      - name: Deploy to EC2
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          EC2_USER: ${{ secrets.EC2_USER }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
+          ENV_VARS: ${{ secrets.ENV_VARS }}
+          CLIENT_URL: ${{ env.CLIENT_URL }}
+        run: |
+          echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
+          chmod 600 key.pem
+          ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST << EOF
+          docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
 
-            cd python-export
-            git pull origin main
-            docker build . -t python-export \
-              --build-arg NODE_ENV=production
-            docker stop python-export || true
-            docker rm -f python-export || true
-            docker run -d --name python-export -p 5000:5000 --env-file .env python-export
-            docker system prune -f
-          else
-            echo "Deploying travelife-be..."
-            
-            docker build . -t travelife-be \
-              --build-arg NODE_ENV=production \
-              --build-arg CLIENT_URL=${CLIENT_URL}
-            docker stop travelife-be || true
-            docker rm -f travelife-be || true
-            docker run -d --name travelife-be -p 4001:4001 --env-file .env --network travel-booking-api_app_network --health-interval=30s --health-retries=3 --restart always travelife-be
-            docker system prune -f
-          fi
+          docker network inspect travelife-network >/dev/null 2>&1 || docker network create travelife-network
+
+          # Pull images
+          docker pull $DOCKER_USERNAME/travelife-be:latest
+          docker pull $DOCKER_USERNAME/python-export:latest
+
+          docker stop travelife-be || true
+          docker rm travelife-be || true
+          docker stop python-export || true
+          docker rm python-export || true
+
+          cat > /tmp/travelife.env << EOL
+          $ENV_VARS
+          EOL
+
+          docker run -d --name travelife-be --network travelife-network --env-file /tmp/travelife.env -e CLIENT_URL=$CLIENT_URL -p 4001:4001 $DOCKER_USERNAME/travelife-be:latest
+          docker run -d --name python-export --network travelife-network -p 5000:5000 $DOCKER_USERNAME/python-export:latest
+
           EOF
