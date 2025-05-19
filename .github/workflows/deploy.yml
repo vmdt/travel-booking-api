@@ -71,4 +71,5 @@ jobs:
           docker run -d --name travelife-be --network travelife-network --env-file /tmp/travelife.env -e CLIENT_URL=$CLIENT_URL -p 4001:4001 $DOCKER_USERNAME/travelife-be:latest
           docker run -d --name python-export --network travelife-network -p 5000:5000 $DOCKER_USERNAME/python-export:latest
 
+          docker system prune -f
           EOF
