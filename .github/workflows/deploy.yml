@@ -1,4 +1,6 @@
-name: Deploy to ECS
+name: Deploy to AWS EC2
+description: Trigger deployment to AWS EC2 instance on push to prod branch
+# This workflow deploys the application to an AWS EC2 instance when changes are pushed to the prod branch.
 
 env:
   CLIENT_URL: https://travelife-booking.vercel.app
