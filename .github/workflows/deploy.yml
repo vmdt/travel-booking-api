@@ -46,6 +46,7 @@ jobs:
           EC2_USER: ${{ secrets.EC2_USER }}
           EC2_HOST: ${{ secrets.EC2_HOST }}
           ENV_VARS: ${{ secrets.ENV_VARS }}
+          ENV_PYTHON_EXPORT: ${{ secrets.ENV_PYTHON_EXPORT }}
           CLIENT_URL: ${{ env.CLIENT_URL }}
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
@@ -68,8 +69,12 @@ jobs:
           $ENV_VARS
           EOL
 
+          cat > /tmp/python-export.env << EOL
+          $ENV_PYTHON_EXPORT
+          EOL
+
           docker run -d --name travelife-be --network travelife-network --env-file /tmp/travelife.env -e CLIENT_URL=$CLIENT_URL -p 4001:4001 $DOCKER_USERNAME/travelife-be:latest
-          docker run -d --name python-export --network travelife-network -p 5000:5000 $DOCKER_USERNAME/python-export:latest
+          docker run -d --name python-export --network travelife-network --env-file /tmp/python-export.env -p 5000:5000 $DOCKER_USERNAME/python-export:latest
 
           docker system prune -f
           EOF
