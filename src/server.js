@@ -12,6 +12,7 @@ const CronWorker = require("./queues/cron.worker");
 const { consumeAuthEmailMessage } = require("./queues/email.consumer");
 const Queues = require("./queues/queues");
 const { createReviewCronJob } = require("./queues/order.producer");
+const { consumeGoWorker } = require("./queues/microservice.consumer");
 
 const SERVER_PORT = config.PORT || 4001;
 
@@ -32,6 +33,7 @@ class TravelServer {
 		this.queues = new Queues(this.ioredis); // run job queue instance
 		this.channel = await createConnection();
 		await consumeAuthEmailMessage(this.channel);
+		await consumeGoWorker(this.channel);
 
 		this.runCronJob();
 

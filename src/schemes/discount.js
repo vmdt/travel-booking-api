@@ -16,7 +16,10 @@ const discountSchema = Joi.object().keys({
     minOrder: Joi.number().optional(),
     isActive: Joi.boolean().optional(),
     maxUses: Joi.number().optional(),
-    tours: Joi.array().items(Joi.string()).optional()
+    tours: Joi.array().items(Joi.string()).optional(),
+    scheduleAt: Joi.string().optional(),
+    applyUsers: Joi.array().items(Joi.string()).optional(),
+    usedUsers: Joi.array().items(Joi.string()).optional()
 });
 
 const updateDiscountSchema = Joi.object().keys({
@@ -30,7 +33,10 @@ const updateDiscountSchema = Joi.object().keys({
     minOrder: Joi.number().optional(),
     maxUses: Joi.number().optional(),
     isActive: Joi.boolean().optional(),
-    tours: Joi.array().items(Joi.string()).optional()
+    tours: Joi.array().items(Joi.string()).optional(),
+    scheduleAt: Joi.string().optional(),
+    applyUsers: Joi.array().items(Joi.string()).optional(),
+    usedUsers: Joi.array().items(Joi.string()).optional()
 });
 
 const getAmountSchema = Joi.object().keys({
