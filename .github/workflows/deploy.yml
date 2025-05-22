@@ -13,9 +13,15 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    env:
-      COMMIT_MSG: ${{ needs.build.outputs.commit_message }}
     steps:
+      - name: Get commit message
+        id: get_commit_message
+        outputs:
+          commit_message: ${{ steps.get_commit_message.outputs.commit_message }}
+        run: |
+          commit_message=$(git log -1 --pretty=%B)
+          echo "commit_message=$commit_message" >> $GITHUB_OUTPUT
+
       - name: Deploy to EC2
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -26,6 +32,7 @@ jobs:
           ENV_PYTHON_EXPORT: ${{ secrets.ENV_PYTHON_EXPORT }}
           ENV_NOTIFICATION_WORKER: ${{ secrets.ENV_NOTIFICATION_WORKER }}
           CLIENT_URL: https://travelife-booking.vercel.app
+          COMMIT_MSG: ${{ steps.get_commit_message.outputs.commit_message }}
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
           chmod 600 key.pem
