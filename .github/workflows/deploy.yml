@@ -58,7 +58,3 @@ jobs:
 
           docker system prune -f
           EOF
-
-outputs:
-  sha: ${{ jobs.checkout.outputs.sha }}
-  commit_message: ${{ jobs.checkout.outputs.commit_message }}
