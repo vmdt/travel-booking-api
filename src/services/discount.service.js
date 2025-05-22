@@ -51,9 +51,9 @@ class DiscountService {
 		});
 
 		if (discount.scheduleAt) {
-			const formatted = moment(discount.scheduleAt).tz("Asia/Ho_Chi_Minh").format("YYYY-MM-DD HH:mm:ss");
-			const startDate = moment(discount.startDate).tz("Asia/Ho_Chi_Minh").format("YYYY-MM-DD");
-			const endDate = moment(discount.endDate).tz("Asia/Ho_Chi_Minh").format("YYYY-MM-DD");
+			const formatted = moment(discount.scheduleAt).format("YYYY-MM-DD HH:mm:ss");
+			const startDate = moment(discount.startDate).format("YYYY-MM-DD");
+			const endDate = moment(discount.endDate).format("YYYY-MM-DD");
 			const channel = await require("../server").channel;
 			const discountUsers = await getOne(
 				DiscountModel,
