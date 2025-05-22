@@ -16,8 +16,6 @@ jobs:
     steps:
       - name: Get commit message
         id: get_commit_message
-        outputs:
-          commit_message: ${{ steps.get_commit_message.outputs.commit_message }}
         run: |
           commit_message=$(git log -1 --pretty=%B)
           echo "commit_message=$commit_message" >> $GITHUB_OUTPUT
