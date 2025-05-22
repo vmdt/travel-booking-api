@@ -41,11 +41,11 @@ jobs:
 
           echo "$ENV_VARS" > /tmp/travelife.env
           echo "$ENV_PYTHON_EXPORT" > /tmp/python-export.env
-          echo "$ENV_NOTIFICATION_WORKER" | base64 -d > /tmp/config.production.json
+          echo "$ENV_NOTIFICATION_WORKER" | base64 -d > /config/config.production.json
 
           docker run -d --name travelife-be --network travelife-network --env-file /tmp/travelife.env -e CLIENT_URL=$CLIENT_URL -p 4001:4001 $DOCKER_USERNAME/travelife-be:latest
           docker run -d --name python-export --network travelife-network --env-file /tmp/python-export.env -p 5000:5000 $DOCKER_USERNAME/python-export:latest
-          docker run -d --name notification-worker --network travelife-network -v $(pwd)/tmp/config.production.json:/config/config.production.json -e APP_ENV=production -e CONFIG_PATH=/config -p 5002:5002 $DOCKER_USERNAME/notification-worker:latest
+          docker run -d --name notification-worker --network travelife-network -v $(pwd)/tmp/config.production.json:/config/config.production.json -p 5002:5002 $DOCKER_USERNAME/notification-worker:latest
 
           docker system prune -f
           EOF
