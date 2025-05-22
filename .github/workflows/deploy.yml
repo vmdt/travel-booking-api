@@ -27,8 +27,7 @@ jobs:
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
           chmod 600 key.pem
-          ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST << 'EOF'
-
+          ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST << EOF
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
           docker network inspect travelife-network >/dev/null 2>&1 || docker network create travelife-network
 
