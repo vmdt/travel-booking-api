@@ -14,7 +14,7 @@ API documentation: https://documenter.getpostman.com/view/28049062/2sA2xb6b7E
 
 ## Features
 
-- **User Management**: Register, login, and manage user accounts.
+- **User Management**: Register, login, and manage user accounts
 - **Tour Management**: CRUD operations for tours and destinations.
 - **Booking System**: Handle bookings with real-time availability updates.
 - **Notification Service**: Send notifications to users for booking updates.
