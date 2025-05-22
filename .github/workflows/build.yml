@@ -100,3 +100,6 @@ jobs:
             --build-arg CONFIG_PATH=/config
           docker tag notification-worker ${{ secrets.DOCKER_USERNAME }}/notification-worker:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/notification-worker:latest
+
+outputs:
+  commit_message: ${{ jobs.checkout.outputs.commit_message }}
