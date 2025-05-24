@@ -65,8 +65,10 @@ class DiscountService {
 				]
 			);
 			let tourName = "";
+			let tourLink = "";
 			if (discount.appliesTo === "specific" && discountUsers.tours.length > 0) {
 				tourName = discountUsers.tours[0].title;
+				tourLink = `${config.CLIENT_URL}/tour-detail/${discountUsers.tours[0]._id}`;
 			}
 
 			const emails = discountUsers.applyUsers.map((user) => user.email);
@@ -86,6 +88,7 @@ class DiscountService {
 						discountName: discount.name,
 						discountCode: discount.code,
 						tourName: tourName,
+						tourLink: tourLink,
 						value: discount.value.toString(),
 						type: discount.type,
 						startDate,
@@ -206,7 +209,7 @@ class DiscountService {
 			payload,
 		);
 
-		if (discountExisting.taskQueueId) {
+		if (discountExisting.taskQueueId && discountExisting.scheduleAt && discountExisting.scheduleAt !== discount.scheduleAt) {
 			const formatted = moment.utc(discount.scheduleAt).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
 			const startDate = moment(discount.startDate).format("YYYY-MM-DD");
 			const endDate = moment(discount.endDate).format("YYYY-MM-DD");
@@ -223,9 +226,11 @@ class DiscountService {
 			);
 
 			let tourName = "";
+			let tourLink = "";
 			const emails = discountUsers.applyUsers.map((user) => user.email);
 			if (discount.appliesTo === "specific" && discountUsers.tours.length > 0) {
 				tourName = discountUsers.tours[0].title;
+				tourLink = `${config.CLIENT_URL}/tour-detail/${discountUsers.tours[0]._id}`;
 			}
 
 			await publishDirectMessage(
@@ -242,6 +247,7 @@ class DiscountService {
 						appIcon: "https://res.cloudinary.com/dxrygyw5d/image/upload/v1709968499/travelife-logo_uf55mo.png",
 						appLink: `${config.CLIENT_URL}`,
 						tourName: tourName,
+						tourLink: tourLink,
 						discountName: discount.name,
 						discountCode: discount.code,
 						value: discount.value.toString(),
