@@ -95,7 +95,7 @@ class DiscountService {
 						endDate,
 					}
 				})
-			)
+			);
 		}
 
 		return { discount };
