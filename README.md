@@ -19,7 +19,7 @@ API documentation: https://documenter.getpostman.com/view/28049062/2sA2xb6b7E
 - **Booking System**: Handle bookings with real-time availability updates.
 - **Notification Service**: Send notifications to users for booking updates.
 - **Message Queue**: Implements **RabbitMQ** for asynchronous task processing (e.g., sending notifications).
-- **Data Caching**: Utilizes **Redis** for improving performance.'
+- **Data Caching**: Utilizes **Redis** for improving performance.'.
 - **Distributed Locking**: Using Optimistic Locking in **Redis**.
 - **Secure API**: Token-based authentication using **JWT**.
 
