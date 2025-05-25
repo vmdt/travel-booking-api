@@ -9,7 +9,7 @@ API documentation: https://documenter.getpostman.com/view/28049062/2sA2xb6b7E
 ## System Design
 
 <p align="center">
-  <img src="https://res.cloudinary.com/dzhl9oxog/image/upload/v1734245875/Picture1_lvpxdg.png" alt="System-Design"/>
+  <img src="https://res.cloudinary.com/dzhl9oxog/image/upload/v1748152757/Blank_diagram_1_rhuhx1.png" alt="System-Design"/>
 </p>
 
 ## Features
@@ -17,11 +17,12 @@ API documentation: https://documenter.getpostman.com/view/28049062/2sA2xb6b7E
 - **User Management**: Register, login, and manage user accounts
 - **Tour Management**: CRUD operations for tours and destinations.
 - **Booking System**: Handle bookings with real-time availability updates.
-- **Notification Service**: Send notifications to users for booking updates.
+- **Notification Service**: Schedule to notifications using **asynq**, run cron job to send notifications
 - **Message Queue**: Implements **RabbitMQ** for asynchronous task processing (e.g., sending notifications).
-- **Data Caching**: Utilizes **Redis** for improving performance.'.
+- **Data Caching**: Utilizes **Redis** for improving performance.
 - **Distributed Locking**: Using Optimistic Locking in **Redis**.
 - **Secure API**: Token-based authentication using **JWT**.
+- **Python Export Service**: Process Images to 360 image using **opencv**. Export docx/pdf file.
 
 ---
 
