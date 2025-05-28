@@ -22,7 +22,7 @@ API documentation: https://documenter.getpostman.com/view/28049062/2sA2xb6b7E
 - **Data Caching**: Utilizes **Redis** for improving performance.
 - **Distributed Locking**: Using Optimistic Locking in **Redis**.
 - **Secure API**: Token-based authentication using **JWT**.
-- **Python Export Service**: Process Images to 360 image using **opencv**. Export docx/pdf file.
+- **Python Export Service**: Process Images to 360 image using **opencv**. Export docx/pdf file
 
 ---
 
