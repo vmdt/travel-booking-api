@@ -9,7 +9,7 @@ API documentation: https://documenter.getpostman.com/view/28049062/2sA2xb6b7E
 ## System Design
 
 <p align="center">
-  <img src="https://res.cloudinary.com/dzhl9oxog/image/upload/v1748152757/Blank_diagram_1_rhuhx1.png" alt="System-Design"/>
+  <img src="https://res.cloudinary.com/dzhl9oxog/image/upload/v1748852629/Blank_diagram_2_tn9gvy.png" alt="System-Design"/>
 </p>
 
 ## Features
@@ -23,6 +23,7 @@ API documentation: https://documenter.getpostman.com/view/28049062/2sA2xb6b7E
 - **Distributed Locking**: Using Optimistic Locking in **Redis**.
 - **Secure API**: Token-based authentication using **JWT**.
 - **Python Export Service**: Process Images to 360 image using **opencv**. Export docx/pdf file
+- **Python AI Chatbot Agent Service**: Chat with realtime AI assistent
 
 ---
 
