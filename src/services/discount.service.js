@@ -2,6 +2,7 @@ const _ = require("lodash");
 const { Types } = require("mongoose");
 const DiscountModel = require("../models/discount.model");
 const TourModel = require("../models/tour.model");
+const moment = require('moment-timezone');
 const {
 	getOne,
 	createOne,
@@ -10,6 +11,9 @@ const {
 	updateOne,
 } = require("../repositories/factory.repo");
 const { BadRequestError, NotFoundError } = require("../utils/error.response");
+const { publishDirectMessage } = require("../queues/auth.producer");
+const UserModel = require("../models/user.model");
+const config = require("../config");
 
 class DiscountService {
 	static createDiscount = async (payload) => {
@@ -24,6 +28,7 @@ class DiscountService {
 			isActive,
 			tours,
 			appliesTo,
+			scheduleAt,
 		} = payload;
 		const discountExisting = await DiscountModel.findOne({ code }).lean();
 
@@ -39,8 +44,59 @@ class DiscountService {
 			minOrder,
 			isActive,
 			appliesTo,
+			scheduleAt: scheduleAt ? moment.tz(scheduleAt, 'Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss') : null,
 			tours: appliesTo === "total_order" ? [] : tours,
+			applyUsers: payload.applyUsers || [],
+			usedUsers: payload.usedUsers || [],
 		});
+
+		if (discount.scheduleAt) {
+			const formatted = moment.utc(discount.scheduleAt).tz('Asia/Ho_Chi_Minh').format("YYYY-MM-DD HH:mm:ss");
+			const startDate = moment(discount.startDate).format("YYYY-MM-DD");
+			const endDate = moment(discount.endDate).format("YYYY-MM-DD");
+			const channel = await require("../server").channel;
+			const discountUsers = await getOne(
+				DiscountModel,
+				{ _id: discount._id },
+				true,
+				[
+					{ path: "applyUsers", select: "email" },
+					{ path: "tours", select: "title" },
+				]
+			);
+			let tourName = "";
+			let tourLink = "";
+			if (discount.appliesTo === "specific" && discountUsers.tours.length > 0) {
+				tourName = discountUsers.tours[0].title;
+				tourLink = `${config.CLIENT_URL}/tour-detail/${discountUsers.tours[0]._id}`;
+			}
+
+			const emails = discountUsers.applyUsers.map((user) => user.email);
+
+			await publishDirectMessage(
+				channel,
+				"microservice",
+				"microservice_key",
+				JSON.stringify({
+					discount_id: discount._id,
+					template: "discount",
+					emails: emails,
+					schedule_at: formatted,
+					metadata: {
+						appIcon: "https://res.cloudinary.com/dxrygyw5d/image/upload/v1709968499/travelife-logo_uf55mo.png",
+						appLink: `${config.CLIENT_URL}`,
+						discountName: discount.name,
+						discountCode: discount.code,
+						tourName: tourName,
+						tourLink: tourLink,
+						value: discount.value.toString(),
+						type: discount.type,
+						startDate,
+						endDate,
+					}
+				})
+			);
+		}
 
 		return { discount };
 	};
@@ -152,6 +208,58 @@ class DiscountService {
 			},
 			payload,
 		);
+
+		if (discountExisting.taskQueueId && discountExisting.scheduleAt && discountExisting.scheduleAt !== discount.scheduleAt) {
+			const formatted = moment.utc(discount.scheduleAt).tz('Asia/Ho_Chi_Minh').format('YYYY-MM-DD HH:mm:ss');
+			const startDate = moment(discount.startDate).format("YYYY-MM-DD");
+			const endDate = moment(discount.endDate).format("YYYY-MM-DD");
+			const channel = await require("../server").channel;
+
+			const discountUsers = await getOne(
+				DiscountModel,
+				{ _id: discount._id },
+				true,
+				[
+					{ path: "applyUsers", select: "email" },
+					{ path: "tours", select: "title" },
+				]
+			);
+
+			let tourName = "";
+			let tourLink = "";
+			const emails = discountUsers.applyUsers.map((user) => user.email);
+			if (discount.appliesTo === "specific" && discountUsers.tours.length > 0) {
+				tourName = discountUsers.tours[0].title;
+				tourLink = `${config.CLIENT_URL}/tour-detail/${discountUsers.tours[0]._id}`;
+			}
+
+			await publishDirectMessage(
+				channel,
+				"microservice",
+				"microservice_key",
+				JSON.stringify({
+					discount_id: discountExisting._id,
+					template: "discount",
+					schedule_at: formatted,
+					emails: emails,
+					task_queue_id: discountExisting.taskQueueId,
+					metadata: {
+						appIcon: "https://res.cloudinary.com/dxrygyw5d/image/upload/v1709968499/travelife-logo_uf55mo.png",
+						appLink: `${config.CLIENT_URL}`,
+						tourName: tourName,
+						tourLink: tourLink,
+						discountName: discount.name,
+						discountCode: discount.code,
+						value: discount.value.toString(),
+						type: discount.type,
+						startDate,
+						endDate,
+						scheduleAt: formatted,
+					}
+				})
+			)
+		}
+
 		return {
 			discount: discount.toObject(),
 		};

@@ -20,7 +20,15 @@ const Discount = new mongoose.Schema({
 		enum: ["total_order", "specific"],
 		required: true,
 	},
+	scheduleAt: { type: Date, default: null },
+	taskQueueId: { type: String, default: null },
 	tours: [{ type: mongoose.Schema.Types.ObjectId, ref: "Tour" }],
+	applyUsers: [
+		{type: mongoose.Schema.Types.ObjectId, ref: "User", default: []},
+	],
+	usedUsers: [
+		{type: mongoose.Schema.Types.ObjectId, ref: "User", default: []},
+	]
 }, { timestamps: true });
 
 Discount.index({ code: "text" });

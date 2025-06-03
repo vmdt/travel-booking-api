@@ -1,3 +1,4 @@
 node_modules
 .env
 python-export
+notification-worker

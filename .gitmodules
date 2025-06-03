@@ -1,3 +1,6 @@
 [submodule "python-export"]
 	path = python-export
 	url = https://github.com/vmdt/python-export.git
+[submodule "notification-worker"]
+	path = notification-worker
+	url = https://github.com/vmdt/notification-worker

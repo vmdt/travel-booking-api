@@ -1,9 +1,4 @@
-name: Deploy to AWS EC2
-description: Trigger deployment to AWS EC2 instance on push to prod branch
-# This workflow deploys the application to an AWS EC2 instance when changes are pushed to the prod branch.
-
-env:
-  CLIENT_URL: https://travelife-booking.vercel.app
+name: Deploy to EC2
 
 on:
   push:
@@ -11,36 +6,14 @@ on:
       - prod
 
 jobs:
+  build:
+    uses: ./.github/workflows/build.yml
+    secrets: inherit
+
   deploy:
+    needs: build
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-        with:
-          ref: "prod"
-          submodules: recursive
-
-      - name: Dockerhub credentials
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Push be image
-        run: |
-          docker build . -t travelife-be \
-            --build-arg NODE_ENV=production \
-            --build-arg CLIENT_URL=${CLIENT_URL}
-          docker tag travelife-be ${{ secrets.DOCKER_USERNAME }}/travelife-be:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/travelife-be:latest
-
-      - name: Push python-export image
-        run: |
-          docker build ./python-export -t python-export
-          docker tag python-export ${{ secrets.DOCKER_USERNAME }}/python-export:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/python-export:latest
-
       - name: Deploy to EC2
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
@@ -49,34 +22,38 @@ jobs:
           EC2_HOST: ${{ secrets.EC2_HOST }}
           ENV_VARS: ${{ secrets.ENV_VARS }}
           ENV_PYTHON_EXPORT: ${{ secrets.ENV_PYTHON_EXPORT }}
-          CLIENT_URL: ${{ env.CLIENT_URL }}
+          ENV_NOTIFICATION_WORKER: ${{ secrets.ENV_NOTIFICATION_WORKER }}
+          CLIENT_URL: https://travelife-booking.vercel.app
+          COMMIT_MSG: ${{ needs.build.outputs.commit_message }}
         run: |
           echo "${{ secrets.EC2_SSH_KEY }}" > key.pem
           chmod 600 key.pem
           ssh -o StrictHostKeyChecking=no -i key.pem $EC2_USER@$EC2_HOST << EOF
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-
           docker network inspect travelife-network >/dev/null 2>&1 || docker network create travelife-network
 
-          # Pull images
-          docker pull $DOCKER_USERNAME/travelife-be:latest
-          docker pull $DOCKER_USERNAME/python-export:latest
+          COMMIT_MSG="${{ env.COMMIT_MSG }}"
 
-          docker stop travelife-be || true
-          docker rm travelife-be || true
-          docker stop python-export || true
-          docker rm python-export || true
+          if echo "$COMMIT_MSG" | grep -q "build:travelife-be"; then
+            docker pull $DOCKER_USERNAME/travelife-be:latest
+            docker stop travelife-be || true && docker rm travelife-be || true
+            echo "$ENV_VARS" > /tmp/travelife.env
+            docker run -d --name travelife-be --network travelife-network --env-file /tmp/travelife.env -e CLIENT_URL=$CLIENT_URL -p 4001:4001 $DOCKER_USERNAME/travelife-be:latest
+          fi
 
-          cat > /tmp/travelife.env << EOL
-          $ENV_VARS
-          EOL
+          if echo "$COMMIT_MSG" | grep -q "build:python-export"; then
+            docker pull $DOCKER_USERNAME/python-export:latest
+            docker stop python-export || true && docker rm python-export || true
+            echo "$ENV_PYTHON_EXPORT" > /tmp/python-export.env
+            docker run -d --name python-export --network travelife-network --env-file /tmp/python-export.env -p 5000:5000 $DOCKER_USERNAME/python-export:latest
+          fi
 
-          cat > /tmp/python-export.env << EOL
-          $ENV_PYTHON_EXPORT
-          EOL
-
-          docker run -d --name travelife-be --network travelife-network --env-file /tmp/travelife.env -e CLIENT_URL=$CLIENT_URL -p 4001:4001 $DOCKER_USERNAME/travelife-be:latest
-          docker run -d --name python-export --network travelife-network --env-file /tmp/python-export.env -p 5000:5000 $DOCKER_USERNAME/python-export:latest
+          if echo "$COMMIT_MSG" | grep -q "build:notification-worker"; then
+            docker pull $DOCKER_USERNAME/notification-worker:latest
+            docker stop notification-worker || true && docker rm notification-worker || true
+            echo "$ENV_NOTIFICATION_WORKER" | base64 -d > /tmp/config.production.json
+            docker run -d --name notification-worker --network travelife-network -v /tmp/config.production.json:/config/config.production.json -p 5002:5002 $DOCKER_USERNAME/notification-worker:latest
+          fi
 
           docker system prune -f
           EOF
