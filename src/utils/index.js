@@ -52,7 +52,7 @@ function formatRevenue(data, startDate, endDate, period = "month") {
 		const formattedDate =
 			period === "month"
 				? `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, "0")}`
-				: startDate.toISOString().split("T")[0];
+				: startDate.toISOString().split("T")[0]
 
 		periods.push(formattedDate);
 		if (period === "month") {
