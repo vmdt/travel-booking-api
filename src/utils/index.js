@@ -51,7 +51,7 @@ function formatRevenue(data, startDate, endDate, period = "month") {
 	while (startDate <= endDate) {
 		const formattedDate =
 			period === "month"
-				? `${startDate.getFullYear()}-${startDate.getMonth() + 1}`
+				? `${startDate.getFullYear()}-${String(startDate.getMonth() + 1).padStart(2, "0")}`
 				: startDate.toISOString().split("T")[0];
 
 		periods.push(formattedDate);
