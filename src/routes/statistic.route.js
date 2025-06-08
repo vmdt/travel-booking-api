@@ -19,7 +19,6 @@ class StatisticRoute {
 			"/top-booked-tours",
 			asyncHandler(statisticController.getTopBookedTours),
 		);
-
 		this.router.get(
 			"/revenue-by-month",
 			asyncHandler(statisticController.getRevenueByMonth),
