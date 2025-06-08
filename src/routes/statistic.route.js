@@ -20,6 +20,11 @@ class StatisticRoute {
 			asyncHandler(statisticController.getTopBookedTours),
 		);
 
+		this.router.get(
+			"/revenue-by-month",
+			asyncHandler(statisticController.getRevenueByMonth),
+		);
+
 		return this.router;
 	}
 }

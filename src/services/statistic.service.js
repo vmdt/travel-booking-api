@@ -104,6 +104,45 @@ class StatisticService {
 
 		return topBookedTours;
 	};
+
+	static getRevenueByMonth = async (month) => {
+		const previousMonth = new Date(month);
+		previousMonth.setMonth(previousMonth.getMonth() - 1);
+		previousMonth.setDate(1);
+
+		const endCurrentMonth = new Date(month);
+		endCurrentMonth.setMonth(endCurrentMonth.getMonth() + 1);
+		endCurrentMonth.setDate(0);
+
+		const revenueByMonth = await StatisticService.getRevenues({
+			startDate: previousMonth,
+			endDate: endCurrentMonth,
+			period: "month",
+		});
+
+		if (!revenueByMonth) {
+			return [];
+		}
+
+		const currentRevenue = revenueByMonth[1].revenue || 0;
+		const previousRevenue = revenueByMonth[0].revenue || 0;
+
+		let profitPercentage = 0;
+		if (previousRevenue === 0) {
+			profitPercentage = currentRevenue > 0 ? 100 : 0;
+		} else {
+			const percent = ((currentRevenue - previousRevenue) / previousRevenue) * 100;
+			profitPercentage = percent > 0
+				? Math.round(percent * 100) / 100
+				: -Math.round(Math.abs(percent) * 100) / 100;
+		}
+
+		return {
+			currentRevenue,
+			previousRevenue,
+			profitPercentage
+		}
+	}
 }
 
 module.exports = StatisticService;

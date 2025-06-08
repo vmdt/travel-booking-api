@@ -47,6 +47,14 @@ class StatisticController {
 			metadata: await StatisticService.getTopBookedTours(numOfTours),
 		}).send(res);
 	};
+
+	getRevenueByMonth = async (req, res, next) => {
+		const { month } = req.query;
+		new SuccessResponse({
+			message: "Get revenue by month successfully",
+			metadata: await StatisticService.getRevenueByMonth(month),
+		}).send(res);
+	}
 }
 
 module.exports = new StatisticController();
