@@ -55,6 +55,13 @@ class StatisticController {
 			metadata: await StatisticService.getRevenueByMonth(month),
 		}).send(res);
 	}
+
+	getTotalUsers = async (req, res, next) => {
+		new SuccessResponse({
+			message: "Get total users successfully",
+			metadata: await StatisticService.getTotalUsers(),
+		}).send(res);
+	}
 }
 
 module.exports = new StatisticController();

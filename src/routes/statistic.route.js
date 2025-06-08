@@ -23,6 +23,10 @@ class StatisticRoute {
 			"/revenue-by-month",
 			asyncHandler(statisticController.getRevenueByMonth),
 		);
+		this.router.get(
+			"/total-users",
+			asyncHandler(statisticController.getTotalUsers),
+		);
 
 		return this.router;
 	}

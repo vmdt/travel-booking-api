@@ -1,6 +1,7 @@
 const { Types } = require("mongoose");
 const BookingModel = require("../models/booking.model");
 const BookingItemsModel = require("../models/bookingItems.model");
+const UserModel = require("../models/user.model");
 const { formatRevenue } = require("../utils");
 
 class StatisticService {
@@ -142,6 +143,27 @@ class StatisticService {
 			previousRevenue,
 			profitPercentage
 		}
+	}
+
+	static getTotalUsers = async () => {
+		const users = await UserModel.aggregate([
+			{
+				$match: {
+					role: "user",
+					isActive: true,
+				},
+			},
+			{
+				$group: {
+					_id: null,
+					total: { $sum: 1 },
+				},
+			},
+		]);
+
+		return {
+			total: users.length ? users[0].total : 0,
+		};
 	}
 }
 
