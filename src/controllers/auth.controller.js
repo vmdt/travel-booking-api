@@ -16,11 +16,16 @@ const { omit } = require("../utils");
 const { changePasswordSchema } = require("../schemes/user/password");
 const config = require("../config");
 const OTPService = require("../services/otp.service");
+const { updateOne } = require("../models/user.model");
+const UserModel = require("../models/user.model");
 
 class AuthController {
 	handleGoogleAuth = async (req, res, next) => {
 		const user = req.user;
 		if (req.user) {
+			const userDb = await UserModel.findById(user._id);
+			userDb.lastSignInAt = Date.now();
+			await userDb.save({ validateBeforeSave: false });
 			const token = signToken({
 				id: user._id,
 				role: user.role,
