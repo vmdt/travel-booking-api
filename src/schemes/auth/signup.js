@@ -30,7 +30,7 @@ const signupSchema = Joi.object().keys({
     phone: Joi.string().pattern(/^[0-9]{10,11}$/).required().messages({
         'string.base': 'Phone number must be of type string',
         'string.pattern.base': 'Phone number must be 10 or 11 digits',
-        'string.empty': 'Phone number is a required field'
+        'string.empty': 'Phone number is a required field',
     }),
 });
 
