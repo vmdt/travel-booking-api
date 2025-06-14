@@ -20,7 +20,18 @@ const signupSchema = Joi.object().keys({
         'string.base': 'Email must be of type string',
         'string.email': 'Invalid email',
         'string.empty': 'Email is a required field'
-    })
+    }),
+    fullname: Joi.string().min(2).max(50).required().messages({
+        'string.base': 'Full name must be of type string',
+        'string.min': 'Full name must be at least 2 of characters',
+        'string.max': 'Full name must be under 50 of characters',
+        'string.empty': 'Full name is a required field'
+    }),
+    phone: Joi.string().pattern(/^[0-9]{10,11}$/).required().messages({
+        'string.base': 'Phone number must be of type string',
+        'string.pattern.base': 'Phone number must be 10 or 11 digits',
+        'string.empty': 'Phone number is a required field'
+    }),
 });
 
 module.exports = signupSchema;

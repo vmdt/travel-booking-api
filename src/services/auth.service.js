@@ -23,7 +23,14 @@ const ROUTING_AUTH = "auth";
 const OTPModel = require("../models/otp.model");
 
 class AuthService {
-	static signup = async ({ username, email, password, passwordConfirm }) => {
+	static signup = async ({ 
+		username, 
+		email, 
+		password, 
+		passwordConfirm,
+		fullname,
+		phone,
+	}) => {
 		const checkUserExist = await getUserByUsernameOrEmail(username, email);
 		if (checkUserExist)
 			throw new BadRequestError("Username or email already exists");
@@ -36,6 +43,8 @@ class AuthService {
 			email,
 			password,
 			passwordConfirm,
+			fullname,
+			phone,
 			emailVerificationToken: randomCharacters,
 		});
 
