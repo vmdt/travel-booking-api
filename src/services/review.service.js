@@ -29,6 +29,13 @@ class ReviewService {
             reviewAt: Date.now()
         });
 
+        const aggreateReview = await aggregateReview(review.tour);
+        // update rating for tour
+        await updateOne(TourModel, { _id: review.tour }, {
+            numOfRating: aggreateReview[0].numOfRating,
+            ratingAverage: Math.floor(aggreateReview[0].ratingAverage*10)/10
+        });
+
         review = await review.populate(popOptions);
 
         return { review }
@@ -59,7 +66,6 @@ class ReviewService {
         const {total, docs: reviews} = await getMany(ReviewModel, {
             tour: new Types.ObjectId(tourId),
             isHidden: false,
-            approve: true
         }, query, true, popOptions);
 
         return {
@@ -84,12 +90,12 @@ class ReviewService {
         if (!review)
             throw new NotFoundError('Not found review');
 
-        const aggreateReview = await aggregateReview(review.tour);
-        // update rating for tour
-        await updateOne(TourModel, { _id: review.tour }, {
-            numOfRating: aggreateReview[0].numOfRating,
-            ratingAverage: Math.floor(aggreateReview[0].ratingAverage*10)/10
-        });
+        // const aggreateReview = await aggregateReview(review.tour);
+        // // update rating for tour
+        // await updateOne(TourModel, { _id: review.tour }, {
+        //     numOfRating: aggreateReview[0].numOfRating,
+        //     ratingAverage: Math.floor(aggreateReview[0].ratingAverage*10)/10
+        // });
 
         review = await review.populate(popOptions);
         return { review };
