@@ -100,7 +100,9 @@ const tourSchema = Joi.object().keys({
 			processedImage: Joi.string().optional().allow(null),
 		}).optional().allow(null),
 	).optional(),
-	isPrivate: Joi.boolean().optional().default(false)
+	isPrivate: Joi.boolean().optional().default(false),
+	defaultVacancies: Joi.number().min(0).optional().default(20),
+	vacancies: Joi.object().optional(),
 });
 
 const updateTourSchema = Joi.object().keys({
@@ -186,7 +188,9 @@ const updateTourSchema = Joi.object().keys({
 			processedImage: Joi.string().optional().allow(null),
 		}).optional().allow(null),
 	).optional(),
-	isPrivate: Joi.boolean().optional().default(false)
+	isPrivate: Joi.boolean().optional().default(false),
+	defaultVacancies: Joi.number().min(0).optional().default(20),
+	vacancies: Joi.object().optional(),
 });
 
 module.exports = {

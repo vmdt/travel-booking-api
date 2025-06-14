@@ -1,5 +1,6 @@
 const { tourSchema, updateTourSchema } = require("../schemes/tour/tour");
 const TourService = require("../services/tour.service");
+const TourAvailabilitiesService = require("../services/tourAvailabilities.service");
 const UploadService = require("../services/upload.service");
 const { BadRequestError } = require("../utils/error.response");
 const { SuccessResponse, NoContent } = require("../utils/sucess.response");
@@ -105,6 +106,14 @@ class TourController {
 			metadata: await TourService.getTopDiscountTours(req.query),
 		}).send(res);
 	};
+
+	getVacanciesByTour = async (req, res, next) => {
+		const { tourId } = req.params;
+		new SuccessResponse({
+			message: "Get vacancies by tour successfully",
+			metadata: await TourAvailabilitiesService.getVacanciesByTour(tourId, req.query.startDate, req.query.endDate),
+		}).send(res);
+	}
 }
 
 module.exports = new TourController();

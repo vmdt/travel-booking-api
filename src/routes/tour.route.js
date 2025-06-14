@@ -37,6 +37,10 @@ class TourRoutes {
 			"/category/:categoryId",
 			asyncHandler(tourController.getToursByCategory),
 		);
+		this.router.get(
+			"/vacancies/:tourId",
+			asyncHandler(tourController.getVacanciesByTour),
+		)
 
 		this.router.use([protect, restrictTo("admin")]);
 		this.router.post(

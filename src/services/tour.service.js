@@ -15,6 +15,7 @@ const {
 const { NotFoundError, BadRequestError } = require("../utils/error.response");
 const { isDataURL } = require("../utils");
 const { upload } = require("../helpers/cloudinary");
+const TourAvailabilitiesService = require("./tourAvailabilities.service");
 
 class TourService {
 	static getTourDetail = async (tourId) => {
@@ -26,7 +27,11 @@ class TourService {
 			true,
 			"category location transports hotels",
 		);
-		return tour;
+
+		const vacancies = await TourAvailabilitiesService.getVacanciesByTour(
+			tour._id,
+		);
+		return { ...tour, vacancies };
 	};
 
 	static getToursWithin = async ({ distance, latlng, unit }) => {
@@ -85,7 +90,7 @@ class TourService {
 	};
 
 	static createTour = async (payload) => {
-		const { thumbnail, images, code, virtualTours, itinerary } = payload;
+		const { thumbnail, images, code, virtualTours, itinerary, vacancies } = payload;
 		if (isDataURL(thumbnail)) {
 			const thumbResult = await upload(thumbnail, {
 				folder: "travelife/tour",
@@ -164,8 +169,16 @@ class TourService {
 		);
 
 		const newTour = await createTour(payload, "category", "interest");
+
+		if (vacancies && typeof vacancies === "object") {
+			await TourAvailabilitiesService.createTourAvailabilities({
+				tourId: newTour._id,
+				vacancies
+			});
+		}
+
 		return {
-			tour: newTour.toObject(),
+			tour: { ...newTour.toObject(), vacancies: vacancies || {} },
 		};
 	};
 
@@ -243,7 +256,7 @@ class TourService {
 		if (!tourExisting) throw new NotFoundError("Not found tour");
 		if (!tourExisting.isActive)
 			throw new BadRequestError("Tour has been deactivated");
-		const { thumbnail, images, virtualTours, itinerary } = payload;
+		const { thumbnail, images, virtualTours, itinerary, vacancies } = payload;
 		if (thumbnail) {
 			if (isDataURL(thumbnail)) {
 				const thumbResult = await upload(thumbnail, {
@@ -324,10 +337,17 @@ class TourService {
 			);
 		}
 
+		if (vacancies && typeof vacancies === "object") {
+			await TourAvailabilitiesService.createTourAvailabilities({
+				tourId: tourExisting._id,
+				vacancies
+			});
+		}
+
 		const tour = await updateTourById(tourId, payload);
 
 		return {
-			tour: tour.toObject(),
+			tour: { ...tour.toObject(), vacancies: vacancies || {} },
 		};
 	};
 

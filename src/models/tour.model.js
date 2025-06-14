@@ -109,6 +109,7 @@ const Tour = new mongoose.Schema({
 		}
 	],
 	isPrivate: { type: Boolean, default: false },
+	defaultVacancies: { type: Number, default: 20 },
 }, {
 	timestamps: true,
 });
