@@ -20,7 +20,7 @@ const CartService = require("./cart.service");
 const { Types } = require("mongoose");
 const cartModel = require("../models/cart.model");
 
-const DELAY_ORDER_TIME = 5; //minutes
+const DELAY_ORDER_TIME = 1; //minutes
 
 class BookingService {
 	static createBooking = async ({
