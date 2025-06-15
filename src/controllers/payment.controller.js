@@ -60,16 +60,6 @@ class PaymentController {
 		} else {
 			return res.render("payment-result", { paymentStatus: "failed" });
 		}
-
-		// res.set(
-		// 	"Content-Security-Policy",
-		// 	"default-src *; style-src 'self' http://* 'unsafe-inline'; script-src 'self' http://* 'unsafe-inline' 'unsafe-eval'",
-		// ).send(`
-		//     <script>
-		//         alert('${message}');
-		//         window.open('${config.CLIENT_URL}/booking/${result.data.bookingId}', '_self', '')
-		//     </script>
-		// `);
 	};
 }
 
