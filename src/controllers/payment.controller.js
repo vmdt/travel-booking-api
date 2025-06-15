@@ -25,7 +25,7 @@ class PaymentController {
 			);
 
 			const booking = await BookingModel.findById(result.data.bookingId);
-			if (booking.checkoutOrder.totalPrice === result.data.amount / 100) {
+			if (booking.checkoutOrder.totalPrice >= result.data.amount / 100) {
 				const paymentInfo = {
 					method: "vnpay",
 					transactionNo: result.data.transactionNo,
