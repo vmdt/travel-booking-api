@@ -5,7 +5,8 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon ./src/server.js",
-    "start": "node ./src/server.js"
+    "start": "node ./src/server.js",
+    "migrate:review": "node ./src/scripts/reviewTour.migration.js"
   },
   "keywords": [],
   "author": "",

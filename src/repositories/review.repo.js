@@ -7,7 +7,7 @@ const aggregateReview = async (tourId) => {
             $match: { 
                 tour: new Types.ObjectId(tourId),
                 isHidden: false,
-                approve: true 
+                // approve: true 
             }
         },
         {
