@@ -22,7 +22,7 @@ const checkTourExist = async (userId , tourId, startDate) => {
 
 const deleteCartItems = async (cartId, tourIds) => {
     let cart;
-    if (!tourIds)
+    if (!tourIds || tourIds.length < 1)
         cart = await CartModel.findByIdAndUpdate(cartId, {
             tours: []
         });
