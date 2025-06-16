@@ -4,6 +4,7 @@ const HotelModel = require("../models/hotel.model");
 const TourModel = require("../models/tour.model");
 const { BadRequestError, NotFoundError } = require("../utils/error.response");
 const { checkTourExist } = require("../repositories/cart.repo");
+const TourAvailabilitiesService = require("./tourAvailabilities.service");
 
 class CartService {
 	static addToCart = async ({ user, tour }) => {
@@ -106,12 +107,27 @@ class CartService {
 		cart = await cart.populate([
 			{
 				path: "tours.tour",
-				select: "title code thumbnail",
+				select: "title code thumbnail defaultVacancies",
 			},
 			{ path: "tours.transports" },
 			{ path: "tours.hotels" },
 		]);
+		
+		cart = cart.toObject();
 
+		cart.tours = await Promise.all(
+			cart.tours.map(async (tour) => {
+				let tourId = tour.tour._id;
+				const vacancies = await TourAvailabilitiesService.getVacanciesByTour(tourId);
+				return { 
+					...tour, 
+					tour: { 
+						...tour.tour, 
+						vacancies 
+					} 
+				};
+			})
+		);
 		return { cart };
 	};
 }
