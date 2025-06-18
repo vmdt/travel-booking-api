@@ -29,20 +29,28 @@ class VirtualTourService {
             }
             images = [...images, ...uploadedImages];
         }
-
-        const response = await axios.post(
-            `${config.PYTHON_EXPORT_URL}/stitch/preview-image`,
-            {
-                'images': images,
-                'folder': 'travelife/tour/' + tourCode + '/virtual/' + pageIndex,
-            },
-            {
-                headers: {
-                    "Content-Type": "application/json",
+        let response;
+        try {
+            response = await axios.post(
+                `${config.PYTHON_EXPORT_URL}/stitch/preview-image`,
+                {
+                    'images': images,
+                    'folder': 'travelife/tour/' + tourCode + '/virtual/' + pageIndex,
                 },
-            },
-        );
-        if (response.status !== 200) {
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                },
+            );
+            if (response.status !== 200) {
+                throw new BadRequestError('Data does not satisfy for stitching images');
+            }
+        } catch (err) {
+            throw new BadRequestError('Data does not satisfy for stitching images');
+        }
+
+        if (!response) {
             throw new BadRequestError('Data does not satisfy for stitching images');
         }
 
